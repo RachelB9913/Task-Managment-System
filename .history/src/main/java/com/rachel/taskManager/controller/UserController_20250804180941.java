@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/users")
 public class UserController {
     
-    // TODO - mappings - implement CRUD operations for users - 
+    // TODO - mappings - implement CRUD operations for tasks - 
 
 }

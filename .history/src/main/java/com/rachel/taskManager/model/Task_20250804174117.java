@@ -15,11 +15,11 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user; // Assuming each task is associated with a user //TODO - maybe more than one user?
+    private User user; // Assuming each task is associated with a user //TODO - maybe more thanone user?
 
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
-    private Project project; // Assuming each task is associated with a project //TODO -do we need it?
+    private Project project; // Assuming each task is associated with a project
 
 
     public Task(Long id, String title, String description) {

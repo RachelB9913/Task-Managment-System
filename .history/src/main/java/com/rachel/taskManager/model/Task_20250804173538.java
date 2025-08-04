@@ -13,15 +13,6 @@ public class Task {
     private String description;
     private String status; // "todo", "in_progress", "done"; TODO - maybe enum?
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user; // Assuming each task is associated with a user //TODO - maybe more than one user?
-
-    @ManyToOne
-    @JoinColumn(name = "project_id", nullable = false)
-    private Project project; // Assuming each task is associated with a project //TODO -do we need it?
-
-
     public Task(Long id, String title, String description) {
         this.id = id;
         this.title = title;

@@ -15,7 +15,7 @@ public class User {
     private Long id;
     private String username;
     private String mail;
-    private String password; // AWS Cognito - do i need password?
+    private String password;
     private boolean isAdmin;
     
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

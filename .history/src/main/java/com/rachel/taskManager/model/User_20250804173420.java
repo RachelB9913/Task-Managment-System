@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 
 
 @Entity
-@Table(name = "users")
 public class User {
     
     @Id
@@ -15,10 +14,10 @@ public class User {
     private Long id;
     private String username;
     private String mail;
-    private String password; // AWS Cognito - do i need password?
+    private String password;
     private boolean isAdmin;
     
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Map<Long, Project> projects; // Assuming projects are stored in a Map with project ID as key
 
     public User(Long id, String username, String mail, String password) {
@@ -38,6 +37,7 @@ public class User {
         this.isAdmin = isAdmin;
         this.projects = projects;
     }
+
 
     // Getters and Setters
     public Long getId() {return id;}

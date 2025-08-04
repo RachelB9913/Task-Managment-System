@@ -16,12 +16,9 @@ public class Project {
     private String name;
     private String description;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private Map<Long, Task> tasks; // Assuming tasks are stored in a Map with task ID as key
-
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user; // Assuming each task is associated with a user //TODO - maybe more thanone user?
+    private Map<Long, Task> tasks; // Assuming tasks are stored in a Map with task ID as key
 
     public Project(Long id, String name, String description) {
         this.id = id;
