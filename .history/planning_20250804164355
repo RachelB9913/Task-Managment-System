@@ -1,0 +1,45 @@
+# things to do:
+1. setup project structure
+2. build entities - 
+                user: Implement user authentication using AWS Cognito User Pool
+                project: Each project should have a name and description.
+                task: Each task should have a title, description, and status (e.g., todo, in-progress, done).
+3. for each - set up repositories
+4. CRUD API - projects and tasks whitin a project
+5. Add AWS Cognito login (manual user setup)
+6. Secure endpoints using Spring Security
+7. Include basic logging and error handling
+8. add testing 
+9.
+10. Extra: Implement role-based access control (e.g., admin, user).
+
+# things to learn/ understand:
+1. AWS Contigo User Pool (?)
+2. what types of logging are there? what to use?
+3.
+4.
+
+
+------------------------------------------------------------------
+# user:
+- user id - long (to be able to keep a whole lot of users)
+- username - String
+- password - String
+- email (?) - String
+- Collection of projects (?)
+- role - boolean (isAdmin - true: admin, false: user)
+
+
+
+
+# project:
+- name - String
+- description - String
+- Collection of tasks (?)
+
+
+
+# task:
+- title - String
+- description - String
+- status - int[]{0,1,2} or enum (todo, in-progress, done)
