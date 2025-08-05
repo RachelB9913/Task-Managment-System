@@ -31,7 +31,7 @@ public class UserService {
     }
 
     public List<ProjectResponseDTO> getProjectsForUser(String sub) {
-        User user = userRepository.findByCognitoSub(sub)
+        User user = userRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         return user.getProjects()

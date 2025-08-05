@@ -6,7 +6,6 @@ import com.rachel.taskManager.dto.ProjectResponseDTO;
 import com.rachel.taskManager.model.User;
 import com.rachel.taskManager.security.CurrentUser;
 import com.rachel.taskManager.service.ProjectService;
-import com.rachel.taskManager.service.UserService;
 
 import java.util.List;
 
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 public class ProjectController {
 
     private final ProjectService projectService;
-    private final UserService userService;
 
     @GetMapping("/all")
     public ResponseEntity<List<ProjectResponseDTO>> getAllProjects() {
@@ -34,7 +32,7 @@ public class ProjectController {
 
     @GetMapping("/my-projects")
     public List<ProjectResponseDTO> getProjectsForUser(@CurrentUser User user) {
-        return userService.getProjectsForUser(user.getCognitoSub());
+        return projectService.getProjectsForUser(user.getCognitoSub());
     }
 
 

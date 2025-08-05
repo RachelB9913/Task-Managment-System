@@ -30,8 +30,8 @@ public class UserService {
         return userMapper.toDTO(user);
     }
 
-    public List<ProjectResponseDTO> getProjectsForUser(String sub) {
-        User user = userRepository.findByCognitoSub(sub)
+    public List<ProjectResponseDTO> getProjectsForUser(Long id) {
+        User user = userRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         return user.getProjects()
@@ -43,9 +43,11 @@ public class UserService {
     public User getOrCreateUserFromToken(Jwt jwt) {
         String sub = jwt.getClaimAsString("sub");
         return userRepository.findByCognitoSub(sub)
+            .map(userMapper::toDTO)
             .orElseGet(() -> {
-                User user = userMapper.fromJwt(jwt);
-                return userRepository.save(user);
+                User newUser = userMapper.fromJwt(jwt);
+                userRepository.save(newUser);
+                return userMapper.toDTO(newUser);
             });
     }
 }

@@ -29,7 +29,7 @@ public class UserMapper {
         return dto;
     }
 
-    public User fromJwt(Jwt jwt) {
+    public User fromJWT(Jwt jwt) {
         User user = new User();
         user.setCognitoSub(jwt.getClaimAsString("sub"));
         user.setMail(jwt.getClaimAsString("email"));

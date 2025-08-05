@@ -3,12 +3,16 @@ package com.rachel.taskManager.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import com.rachel.taskManager.dto.ProjectResponseDTO;
 import com.rachel.taskManager.dto.UserDTO;
 import com.rachel.taskManager.service.UserService;
 import com.rachel.taskManager.util.JwtUtils;
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -27,4 +31,10 @@ public class UserController {
         UserDTO user = userService.getCurrentUser(sub);
         return ResponseEntity.ok(user);
     }
+
+    // @GetMapping("/{id}/projects")
+    // public ResponseEntity<List<ProjectResponseDTO>> getProjectsForUser(@PathVariable Long id) {
+    //     List<ProjectResponseDTO> projects = userService.getProjectsForUser(id);
+    //     return ResponseEntity.ok(projects);
+    // }
 }

@@ -3,10 +3,8 @@ package com.rachel.taskManager.controller;
 import lombok.RequiredArgsConstructor;
 import com.rachel.taskManager.dto.ProjectRequestDTO;
 import com.rachel.taskManager.dto.ProjectResponseDTO;
-import com.rachel.taskManager.model.User;
 import com.rachel.taskManager.security.CurrentUser;
 import com.rachel.taskManager.service.ProjectService;
-import com.rachel.taskManager.service.UserService;
 
 import java.util.List;
 
@@ -20,9 +18,8 @@ import org.springframework.web.bind.annotation.*;
 public class ProjectController {
 
     private final ProjectService projectService;
-    private final UserService userService;
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<List<ProjectResponseDTO>> getAllProjects() {
         return ResponseEntity.ok(projectService.getAllProjects());
     }
@@ -32,9 +29,9 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.getProjectById(projectId));
     }
 
-    @GetMapping("/my-projects")
+    @GetMapping("/user/{userId}")
     public List<ProjectResponseDTO> getProjectsForUser(@CurrentUser User user) {
-        return userService.getProjectsForUser(user.getCognitoSub());
+        return projectService.getProjectsForUser(user.getId());
     }
 
 

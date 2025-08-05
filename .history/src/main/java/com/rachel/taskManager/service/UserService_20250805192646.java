@@ -30,8 +30,8 @@ public class UserService {
         return userMapper.toDTO(user);
     }
 
-    public List<ProjectResponseDTO> getProjectsForUser(String sub) {
-        User user = userRepository.findByCognitoSub(sub)
+    public List<ProjectResponseDTO> getProjectsForUser(Long id) {
+        User user = userRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         return user.getProjects()
