@@ -3,6 +3,7 @@ package com.rachel.taskManager.controller;
 import lombok.RequiredArgsConstructor;
 import com.rachel.taskManager.dto.ProjectRequestDTO;
 import com.rachel.taskManager.dto.ProjectResponseDTO;
+import com.rachel.taskManager.model.Project;
 import com.rachel.taskManager.service.ProjectService;
 
 import java.util.List;

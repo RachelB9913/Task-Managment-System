@@ -38,21 +38,15 @@ public class ProjectService {
         return ProjectMapper.toDTO(saved);
     }
 
-    public ProjectResponseDTO updateProject(Long id, ProjectRequestDTO dto) {
-        Project existing = projectRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Project not found"));
-
-        existing.setName(dto.getName());
-        existing.setDescription(dto.getDescription());
-
-        Project updated = projectRepository.save(existing);
-        return ProjectMapper.toDTO(updated);
+    public Project updateProject(Long id, Project updatedProject) {
+        Project existing = getProjectById(id);
+        existing.setName(updatedProject.getName());
+        existing.setDescription(updatedProject.getDescription());
+        return projectRepository.save(existing);
     }
 
     public void deleteProject(Long id) {
-        Project project = projectRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Project not found"));
-        projectRepository.delete(project);
+        projectRepository.deleteById(id);
     }
 
 }

@@ -3,6 +3,7 @@ package com.rachel.taskManager.controller;
 import lombok.RequiredArgsConstructor;
 import com.rachel.taskManager.dto.ProjectRequestDTO;
 import com.rachel.taskManager.dto.ProjectResponseDTO;
+import com.rachel.taskManager.model.Project;
 import com.rachel.taskManager.service.ProjectService;
 
 import java.util.List;
@@ -19,8 +20,8 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @GetMapping
-    public ResponseEntity<List<ProjectResponseDTO>> getAllProjects() {
-        return ResponseEntity.ok(projectService.getAllProjects());
+    public List<Project> getAllProjects() {
+        return projectService.getAllProjects();
     }
 
     @GetMapping("/{projectId}")
@@ -33,15 +34,14 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.createProject(dto));
     }
 
-     @PutMapping("/{projectId}")
-    public ResponseEntity<ProjectResponseDTO> updateProject(@PathVariable Long projectId,
-                                                            @RequestBody ProjectRequestDTO dto) {
-        return ResponseEntity.ok(projectService.updateProject(projectId, dto));
+    @PutMapping("/{id}")
+    public Project updateProject(@PathVariable Long id, @RequestBody Project project) {
+        return projectService.updateProject(id, project);
     }
 
-    @DeleteMapping("/{projectId}")
-    public ResponseEntity<Void> deleteProject(@PathVariable Long projectId) {
-        projectService.deleteProject(projectId);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
+        projectService.deleteProject(id);
         return ResponseEntity.noContent().build();
     }
 }

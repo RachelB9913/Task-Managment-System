@@ -23,10 +23,6 @@ public class Project {
     @JoinColumn(name = "user_id", nullable = false)
     private User user; // Assuming each task is associated with a user //TODO - maybe more thanone user?
 
-    public Project() {
-        this.tasks = new HashMap<>(); // Initialize tasks as empty
-    }
-    
     public Project(Long id, String name, String description) {
         this.id = id;
         this.name = name;

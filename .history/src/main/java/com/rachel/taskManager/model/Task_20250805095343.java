@@ -21,8 +21,6 @@ public class Task {
     @JoinColumn(name = "project_id", nullable = false)
     private Project project; // Assuming each task is associated with a project //TODO -do we need it?
 
-    public Task() {
-    }
 
     public Task(Long id, String title, String description) {
         this.id = id;
@@ -37,6 +35,7 @@ public class Task {
         this.description = description;
         this.status = status;
     }
+
 
     // Getters and Setters
     public Long getId() { return id; }

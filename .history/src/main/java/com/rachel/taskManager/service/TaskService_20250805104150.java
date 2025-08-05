@@ -42,10 +42,7 @@ public class TaskService {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Task not found"));
 
-        task.setTitle(updatedTaskDTO.getTitle());
-        task.setDescription(updatedTaskDTO.getDescription());
-        task.setStatus(updatedTaskDTO.getStatus());
-
+        TaskMapper.updateEntityFromDTO(task, updatedTaskDTO);
         Task savedTask = taskRepository.save(task);
         return TaskMapper.toDTO(savedTask);
     }
@@ -60,7 +57,7 @@ public class TaskService {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NoSuchElementException("Project not found"));
 
-        Task task = TaskMapper.toEntity(taskDTO);
+        Task task = TaskMapper.fromDTO(taskDTO);
         task.setProject(project);
         Task savedTask = taskRepository.save(task);
         return TaskMapper.toDTO(savedTask);

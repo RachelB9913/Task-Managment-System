@@ -21,8 +21,6 @@ public class Task {
     @JoinColumn(name = "project_id", nullable = false)
     private Project project; // Assuming each task is associated with a project //TODO -do we need it?
 
-    public Task() {
-    }
 
     public Task(Long id, String title, String description) {
         this.id = id;
@@ -38,6 +36,7 @@ public class Task {
         this.status = status;
     }
 
+
     // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; } //TODO - maybe do not allow setting ID after creation
@@ -52,8 +51,8 @@ public class Task {
     public void setStatus(String status) { this.status = status; }
 
     public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; } // TODO - maybe to set by userId and maybe do not allow
+    public void setUser(User user) { this.user = user; }
 
     public Project getProject() { return project; }
-    public void setProject(Project project) { this.project = project; } // TODO - maybe to set by projectId and maybe do not allow
+    public void setProject(Project project) { this.project = project; } // TODO - maybe to set by projectId
 }

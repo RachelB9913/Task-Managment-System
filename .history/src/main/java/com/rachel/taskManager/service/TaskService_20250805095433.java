@@ -2,52 +2,43 @@ package com.rachel.taskManager.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.rachel.taskManager.dto.TaskRequestDTO;
-import com.rachel.taskManager.dto.TaskResponseDTO;
-import com.rachel.taskManager.mapper.TaskMapper;
+import com.rachel.taskManager.repository.TaskRepository;
 import com.rachel.taskManager.model.Project;
 import com.rachel.taskManager.model.Task;
 import com.rachel.taskManager.repository.ProjectRepository;
-import com.rachel.taskManager.repository.TaskRepository;
+
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class TaskService {
-
+    
     private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
 
-    public List<TaskResponseDTO> getTasksByProjectId(Long projectId) {
+    public List<Task> getTasksByProjectId(Long projectId){
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NoSuchElementException("Project not found"));
-
-        return project.getTasks().values().stream()
-                .map(TaskMapper::toDTO)
-                .collect(Collectors.toList());
+        return project.getTasks().values().stream().toList(); // TODO - maybe chage, for now - assuming Project has a getTasks method that returns a Map<Long, Task>
     }
 
-    public TaskResponseDTO getTaskById(Long id) {
-        Task task = taskRepository.findById(id)
+    public Task getTaskById(Long taskId) {
+        return taskRepository.findById(taskId)
                 .orElseThrow(() -> new NoSuchElementException("Task not found"));
-        return TaskMapper.toDTO(task);
     }
 
-    public TaskResponseDTO updateTask(Long id, TaskRequestDTO updatedTaskDTO) {
+    public Task updateTask(Long id, Task updatedTask) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Task not found"));
 
-        task.setTitle(updatedTaskDTO.getTitle());
-        task.setDescription(updatedTaskDTO.getDescription());
-        task.setStatus(updatedTaskDTO.getStatus());
-
-        Task savedTask = taskRepository.save(task);
-        return TaskMapper.toDTO(savedTask);
+        task.setTitle(updatedTask.getTitle());
+        task.setDescription(updatedTask.getDescription());
+        task.setStatus(updatedTask.getStatus());
+        return taskRepository.save(task);
     }
 
     public void deleteTask(Long id) {
@@ -56,13 +47,12 @@ public class TaskService {
         taskRepository.delete(task);
     }
 
-    public TaskResponseDTO createTask(Long projectId, TaskRequestDTO taskDTO) {
+    public Task createTask(Long projectId, Task task) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NoSuchElementException("Project not found"));
-
-        Task task = TaskMapper.toEntity(taskDTO);
-        task.setProject(project);
-        Task savedTask = taskRepository.save(task);
-        return TaskMapper.toDTO(savedTask);
+        
+        task.setProject(project); // Assuming Task has a setProject method
+        return taskRepository.save(task);
     }
+
 }
