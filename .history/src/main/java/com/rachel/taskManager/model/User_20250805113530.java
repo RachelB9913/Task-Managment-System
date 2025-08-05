@@ -21,18 +21,20 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Map<Long, Project> projects; // Assuming projects are stored in a Map with project ID as key
 
-    public User(Long id, String username, String mail) {
+    public User(Long id, String username, String mail, String password) {
         this.id = id;
         this.username = username;
         this.mail = mail;
+        this.password = password;
         this.isAdmin = false; // Default to false
         this.projects = new HashMap<>(); // Initialize projects as empty
     }
 
-    public User(Long id, String username, String mail, boolean isAdmin, Map<Long, Project> projects) {
+    public User(Long id, String username, String mail, String password, boolean isAdmin, Map<Long, Project> projects) {
         this.id = id;
         this.username = username;
         this.mail = mail;
+        this.password = password;
         this.isAdmin = isAdmin;
         this.projects = projects;
     }
@@ -46,6 +48,9 @@ public class User {
 
     public String getMail() {return mail;}
     public void setMail(String mail) {this.mail = mail;}
+
+    public String getPassword() {return password;}
+    public void setPassword(String password) {this.password = password;}
 
     public boolean isAdmin() {return isAdmin;}
     public void setAdmin(boolean isAdmin) {this.isAdmin = isAdmin;}
