@@ -3,6 +3,7 @@ package com.rachel.taskManager.mapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.rachel.taskManager.dto.ProjectDTO;
 import com.rachel.taskManager.dto.ProjectRequestDTO;
 import com.rachel.taskManager.dto.ProjectResponseDTO;
 import com.rachel.taskManager.model.Project;
@@ -36,13 +37,5 @@ public class ProjectMapper {
         return dtos.stream()
             .map(ProjectMapper::toEntity)
             .collect(Collectors.toList());
-    }
-
-    public ProjectResponseDTO toResponseDTO(Project project) {
-        ProjectResponseDTO dto = new ProjectResponseDTO();
-        dto.setId(project.getId());
-        dto.setName(project.getName());
-        dto.setDescription(project.getDescription());
-        return dto;
     }
 }

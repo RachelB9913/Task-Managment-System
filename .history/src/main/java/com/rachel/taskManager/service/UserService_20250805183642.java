@@ -1,5 +1,6 @@
 package com.rachel.taskManager.service;
 
+import com.rachel.taskManager.dto.ProjectDTO;
 import com.rachel.taskManager.dto.ProjectResponseDTO;
 import com.rachel.taskManager.dto.UserDTO;
 import com.rachel.taskManager.mapper.ProjectMapper;

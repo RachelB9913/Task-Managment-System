@@ -1,5 +1,5 @@
 package com.rachel.taskManager.dto;
 
-public class UserRequestDTO {
-    
+public class ProjectDTO {
+
 }

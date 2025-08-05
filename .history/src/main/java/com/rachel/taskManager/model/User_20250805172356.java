@@ -1,6 +1,8 @@
 package com.rachel.taskManager.model;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jakarta.persistence.*;
 
@@ -29,13 +31,13 @@ public class User {
     // Getters and Setters
     public String getCognitoSub() {return cognitoSub;}
     public void setCognitoSub(String cognitoSub) {this.cognitoSub = cognitoSub;}
-
+    
     public String getMail() {return mail;}
     public void setMail(String mail) {this.mail = mail;}
 
     public boolean isAdmin() {return isAdmin;}
     public void setAdmin(boolean isAdmin) {this.isAdmin = isAdmin;}
 
-    public List<Project> getProjects() {return projects;}
-    public void setProjects(List<Project> projects) {this.projects = projects;}
+    public Map<Long, Project> getProjects() {return projects;}
+    public void setProjects(Map<Long, Project> projects) {this.projects = projects;}
 }

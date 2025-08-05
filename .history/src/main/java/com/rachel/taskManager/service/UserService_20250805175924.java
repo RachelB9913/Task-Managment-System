@@ -1,19 +1,11 @@
 package com.rachel.taskManager.service;
 
-import com.rachel.taskManager.dto.ProjectResponseDTO;
-import com.rachel.taskManager.dto.UserDTO;
-import com.rachel.taskManager.mapper.ProjectMapper;
-import com.rachel.taskManager.mapper.UserMapper;
 import com.rachel.taskManager.model.User;
 import com.rachel.taskManager.repository.UserRepository;
-
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +13,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final ProjectMapper projectMapper;
 
     public UserDTO getCurrentUser(String sub) {
         User user = userRepository.findByCognitoSub(sub)
@@ -29,13 +20,12 @@ public class UserService {
         return userMapper.toDTO(user);
     }
 
-    public List<ProjectResponseDTO> getProjectsForUser(Long id) {
+    public List<ProjectDTO> getProjectsForUser(Long id) {
         User user = userRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("User not found"));
-
         return user.getProjects()
             .stream()
-            .map(projectMapper::toResponseDTO)
+            .map(project -> userMapper.getProjectMapper().toDTO(project))
             .toList();
     }
 }

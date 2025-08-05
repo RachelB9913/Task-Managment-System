@@ -37,12 +37,4 @@ public class ProjectMapper {
             .map(ProjectMapper::toEntity)
             .collect(Collectors.toList());
     }
-
-    public ProjectResponseDTO toResponseDTO(Project project) {
-        ProjectResponseDTO dto = new ProjectResponseDTO();
-        dto.setId(project.getId());
-        dto.setName(project.getName());
-        dto.setDescription(project.getDescription());
-        return dto;
-    }
 }
