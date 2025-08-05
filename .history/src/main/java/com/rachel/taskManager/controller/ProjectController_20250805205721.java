@@ -2,6 +2,7 @@ package com.rachel.taskManager.controller;
 
 import lombok.RequiredArgsConstructor;
 
+import com.rachel.taskManager.dto.ProjectDTO;
 import com.rachel.taskManager.dto.ProjectRequestDTO;
 import com.rachel.taskManager.dto.ProjectResponseDTO;
 import com.rachel.taskManager.model.User;
@@ -40,13 +41,12 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<ProjectResponseDTO> createProject(@RequestBody ProjectRequestDTO projectDTO,
-                                                            @CurrentUser User user) {
-        ProjectResponseDTO created = projectService.createProject(projectDTO, user);
+    public ResponseEntity<ProjectDTO> createProject(@RequestBody ProjectRequestDTO projectDTO) {
+        ProjectDTO created = projectService.createProject(projectDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    @PutMapping("/{projectId}")
+     @PutMapping("/{projectId}")
     public ResponseEntity<ProjectResponseDTO> updateProject(@PathVariable Long projectId,
                                                             @RequestBody ProjectRequestDTO dto) {
         return ResponseEntity.ok(projectService.updateProject(projectId, dto));

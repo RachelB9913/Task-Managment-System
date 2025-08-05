@@ -8,11 +8,14 @@ import com.rachel.taskManager.dto.UserDTO;
 import com.rachel.taskManager.mapper.UserMapper;
 import com.rachel.taskManager.model.User;
 import com.rachel.taskManager.security.CurrentUser;
+import com.rachel.taskManager.service.UserService;
+import com.rachel.taskManager.util.JwtUtils;
 
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+// import org.springframework.security.core.Authentication;
 
 
 @RestController
@@ -20,7 +23,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @RequiredArgsConstructor
 public class UserController {
 
+    // private final UserService userService;
     private final UserMapper userMapper;
+
+    // @GetMapping("/me")
+    // public ResponseEntity<UserDTO> getCurrentUser(Authentication authentication) {
+    //     String sub = JwtUtils.extractSub(authentication);
+    //     UserDTO user = userService.getCurrentUser(sub);
+    //     return ResponseEntity.ok(user);
+    // }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/me")

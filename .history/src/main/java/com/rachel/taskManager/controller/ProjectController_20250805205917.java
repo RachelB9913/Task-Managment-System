@@ -2,6 +2,7 @@ package com.rachel.taskManager.controller;
 
 import lombok.RequiredArgsConstructor;
 
+import com.rachel.taskManager.dto.ProjectDTO;
 import com.rachel.taskManager.dto.ProjectRequestDTO;
 import com.rachel.taskManager.dto.ProjectResponseDTO;
 import com.rachel.taskManager.model.User;
