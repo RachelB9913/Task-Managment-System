@@ -83,11 +83,6 @@ public class TaskService {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Task not found"));
         checkTaskOwnership(task, currentUser);
-
-        // Remove task from project's task set
-        Project project = task.getProject();
-        project.getTasks().remove(task);
-
         taskRepository.delete(task);
         logger.info("Task {} deleted successfully by current user", id);
     }

@@ -18,19 +18,19 @@ public class ProjectMapper {
         return project;
     }
 
-    // public static ProjectResponseDTO toDTO(Project project) {
-    //     ProjectResponseDTO dto = new ProjectResponseDTO();
-    //     dto.setId(project.getId());
-    //     dto.setName(project.getName());
-    //     dto.setDescription(project.getDescription());
-    //     if (project.getTasks() != null) {
-    //         dto.setTasks(project.getTasks().stream()
-    //             .map(TaskMapper::toDTO)
-    //             .collect(Collectors.toList()));
-    //     }
+    public static ProjectResponseDTO toDTO(Project project) {
+        ProjectResponseDTO dto = new ProjectResponseDTO();
+        dto.setId(project.getId());
+        dto.setName(project.getName());
+        dto.setDescription(project.getDescription());
+        if (project.getTasks() != null) {
+            dto.setTasks(project.getTasks().stream()
+                .map(TaskMapper::toDTO)
+                .collect(Collectors.toList()));
+        }
 
-    //     return dto;
-    // }
+        return dto;
+    }
 
     public static List<Project> toEntityList(List<ProjectRequestDTO> dtos) {
         if (dtos == null) {
@@ -41,7 +41,7 @@ public class ProjectMapper {
             .collect(Collectors.toList());
     }
 
-    public ProjectResponseDTO toDTO(Project project) {
+    public ProjectResponseDTO toResponseDTO(Project project) {
         ProjectResponseDTO dto = new ProjectResponseDTO();
         dto.setId(project.getId());
         dto.setName(project.getName());
@@ -55,5 +55,4 @@ public class ProjectMapper {
 
         return dto;
     }
-
 }

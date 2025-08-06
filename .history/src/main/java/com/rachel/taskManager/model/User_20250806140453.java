@@ -37,6 +37,6 @@ public class User {
     public boolean isAdmin() {return isAdmin;}
     public void setAdmin(boolean isAdmin) {this.isAdmin = isAdmin;}
 
-    public Set<Project> getProjects() {return projects;}
-    public void setProjects(Set<Project> projects) {this.projects = projects;}
+    public List<Project> getProjects() {return projects;}
+    public void setProjects(List<Project> projects) {this.projects = projects;}
 }

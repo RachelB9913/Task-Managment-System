@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 public class ProjectService {
     
     private final ProjectRepository projectRepository;
-    private final ProjectMapper projectMapper;
     private static final Logger logger = LoggerFactory.getLogger(ProjectService.class);
 
     private void checkProjectOwnership(Project project, User currentUser) {
@@ -36,7 +35,7 @@ public class ProjectService {
     
     public List<ProjectResponseDTO> getAllProjects() {
         return projectRepository.findAll().stream()
-                .map(projectMapper::toDTO)
+                .map(ProjectMapper::toDTO)
                 .toList();
     }
 
@@ -45,7 +44,7 @@ public class ProjectService {
                 .orElseThrow(() -> new NoSuchElementException("Project not found"));
         checkProjectOwnership(project, currentUser);
         logger.info("User [{}] accessed project {}", formatUser(currentUser), id);
-        return projectMapper.toDTO(project);
+        return ProjectMapper.toDTO(project);
     }
 
     public ProjectResponseDTO createProject(ProjectRequestDTO projectDTO, User user) {
@@ -54,7 +53,7 @@ public class ProjectService {
         project.setUser(user);
         Project saved = projectRepository.save(project);
         logger.info("Project {} created successfully by {}", saved.getId(), formatUser(user));
-        return projectMapper.toDTO(saved);
+        return ProjectMapper.toDTO(saved);
     }
 
 
@@ -70,7 +69,7 @@ public class ProjectService {
 
         Project updated = projectRepository.save(existing);
         logger.info("Project {} updated successfully by {}", updated.getId(), formatUser(updated.getUser()));
-        return projectMapper.toDTO(updated);
+        return ProjectMapper.toDTO(updated);
     }
 
     public void deleteProject(Long id) {

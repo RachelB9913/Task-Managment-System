@@ -15,7 +15,9 @@ public interface UserRepository extends JpaRepository<User, String> {
     @EntityGraph(attributePaths = {"projects", "projects.tasks"})
     Optional<User> findByMail(String mail);
 
-    @EntityGraph(attributePaths = {"projects", "projects.tasks"})
     Optional<User> findByCognitoSub(String cognitoSub);
+
+    @EntityGraph(attributePaths = {"projects", "projects.tasks"})
+    Optional<User> findByCognitoSubWithProjectsAndTasks(String sub);
 
 }

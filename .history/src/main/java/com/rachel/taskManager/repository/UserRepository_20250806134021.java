@@ -10,12 +10,8 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface UserRepository extends JpaRepository<User, String> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
     @EntityGraph(attributePaths = {"projects", "projects.tasks"})
     Optional<User> findByMail(String mail);
-
-    @EntityGraph(attributePaths = {"projects", "projects.tasks"})
-    Optional<User> findByCognitoSub(String cognitoSub);
-
 }

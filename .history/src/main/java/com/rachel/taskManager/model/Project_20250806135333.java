@@ -1,7 +1,7 @@
 package com.rachel.taskManager.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -17,21 +17,21 @@ public class Project {
     private String description;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    private Set<Task> tasks; // Assuming tasks are stored in a Map with task ID as key
+    private List<Task> tasks; // Assuming tasks are stored in a Map with task ID as key
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user; // Assuming each task is associated with a user //TODO - maybe more thanone user?
 
     public Project() {
-        this.tasks = new HashSet<>();
+        this.tasks = new ArrayList<>(); // Initialize tasks as empty
     }
     
     public Project(Long id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.tasks = new HashSet<>();
+        this.tasks = new ArrayList<>(); // Initialize tasks as empty
     }
 
     // Getters and Setters
@@ -44,8 +44,8 @@ public class Project {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public Set<Task> getTasks() { return tasks; }
-    public void setTasks(Set<Task> tasks) { this.tasks = tasks; }
+    public List<Task> getTasks() { return tasks; }
+    public void setTasks(List<Task> tasks) { this.tasks = tasks; }
 
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; } // TODO - maybe to set by userId

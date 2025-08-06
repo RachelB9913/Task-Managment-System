@@ -39,7 +39,10 @@ public class UserService {
         User user = userRepository.findByCognitoSub(sub)
             .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        return user.getProjects().stream().map(projectMapper::toDTO).toList();
+        return user.getProjects()
+            .stream()
+            .map(projectMapper::toResponseDTO)
+            .toList();
     }
 
     public User getOrCreateUserFromToken(Jwt jwt) {
@@ -53,12 +56,14 @@ public class UserService {
         }
         
         // Try to find the user with full graph
-        return userRepository.findByCognitoSub(sub)
+        return userRepository.findByCognitoSubWithProjectsAndTasks(sub)
             .orElseGet(() -> {
                 User user = userMapper.fromJwt(jwt);
                 userRepository.save(user);
-                return userRepository.findByCognitoSub(sub)
-                        .orElseThrow(() -> new IllegalStateException("User not found after save"));
+
+                // Important: re-fetch using EntityGraph to load projects+tasks
+                return userRepository.findByCognitoSubWithProjectsAndTasks(sub)
+                        .orElseThrow(() -> new IllegalStateException("Failed to re-fetch user after saving"));
             });
     }
 }

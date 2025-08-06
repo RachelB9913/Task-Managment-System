@@ -41,7 +41,7 @@ public class ProjectMapper {
             .collect(Collectors.toList());
     }
 
-    public ProjectResponseDTO toDTO(Project project) {
+    public ProjectResponseDTO toResponseDTO(Project project) {
         ProjectResponseDTO dto = new ProjectResponseDTO();
         dto.setId(project.getId());
         dto.setName(project.getName());
