@@ -18,15 +18,32 @@ import org.springframework.beans.factory.annotation.Value;
 @Service
 public class CognitoAuthService {
 
-    @Value("${cognito.client-id}") String clientId;
+    // @Value("${cognito.client-id}") String clientId;
 
-    @Value("${cognito.redirect-uri}")
-    private String redirectUri;
+    // @Value("${cognito.redirect-uri}")
+    // private String redirectUri;
 
-    @Value("${cognito.token-uri}")
-    private String tokenUri;
+    // @Value("${cognito.token-uri}")
+    // private String tokenUri;
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    // private final RestTemplate restTemplate = new RestTemplate();
+
+    private final RestTemplate restTemplate;
+    private final String clientId;
+    private final String redirectUri;
+    private final String tokenUri;
+
+    public CognitoAuthService(
+        RestTemplate restTemplate,
+        @Value("${cognito.clientId}") String clientId,
+        @Value("${cognito.redirectUri}") String redirectUri,
+        @Value("${cognito.tokenUri}") String tokenUri
+    ) {
+        this.restTemplate = restTemplate;
+        this.clientId = clientId;
+        this.redirectUri = redirectUri;
+        this.tokenUri = tokenUri;
+    }
 
     public CognitoTokenResponse exchangeCodeForTokens(String code) {
         HttpHeaders headers = new HttpHeaders();
