@@ -5,14 +5,10 @@ import com.rachel.taskManager.dto.TaskResponseDTO;
 import com.rachel.taskManager.model.User;
 import com.rachel.taskManager.security.CurrentUser;
 import com.rachel.taskManager.service.TaskService;
-
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import static com.rachel.taskManager.util.LogUtils.formatUser;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import org.slf4j.Logger;
@@ -22,7 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-@Validated
+
 @RestController
 @RequestMapping("/api/projects/{projectId}/tasks") // Tasks belong to a project
 @RequiredArgsConstructor
@@ -43,8 +39,8 @@ public class TaskController {
     public ResponseEntity<Page<TaskResponseDTO>> getTasks(
             @PathVariable Long projectId,
             @CurrentUser User currentUser,
-            @RequestParam(defaultValue = "0") @Min(0) int page,
-            @RequestParam(defaultValue = "5") @Min(0) @Max(100) int size) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<TaskResponseDTO> tasks = taskService.getTasksByProjectIdAndUser(projectId, currentUser, pageable);
         return ResponseEntity.ok(tasks);

@@ -8,11 +8,6 @@ import com.rachel.taskManager.model.User;
 import com.rachel.taskManager.security.CurrentUser;
 import com.rachel.taskManager.service.ProjectService;
 import com.rachel.taskManager.service.UserService;
-
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import org.springframework.validation.annotation.Validated;
-
 import static com.rachel.taskManager.util.LogUtils.formatUser;
 
 import java.util.List;
@@ -28,7 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-@Validated
+
 @RestController
 @RequestMapping("/api/projects")
 @RequiredArgsConstructor
@@ -40,8 +35,8 @@ public class ProjectController {
 
     @GetMapping("/all")
     public ResponseEntity<Page<ProjectResponseDTO>> getAllProjects(
-            @RequestParam(defaultValue = "0") @Min(0) int page,
-            @RequestParam(defaultValue = "5") @Min(0) @Max(100) int size) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
             Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(projectService.getAllProjects(pageable));
     }

@@ -1,6 +1,9 @@
 package com.rachel.taskManager.service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 
 import com.rachel.taskManager.dto.TaskRequestDTO;
@@ -37,7 +40,7 @@ public class TaskService {
         }
     }
     
-
+    
     public Page<TaskResponseDTO> getTasksByProjectIdAndUser(Long projectId, User currentUser, Pageable pageable) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NoSuchElementException("Project not found"));

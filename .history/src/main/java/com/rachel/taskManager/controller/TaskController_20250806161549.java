@@ -5,14 +5,13 @@ import com.rachel.taskManager.dto.TaskResponseDTO;
 import com.rachel.taskManager.model.User;
 import com.rachel.taskManager.security.CurrentUser;
 import com.rachel.taskManager.service.TaskService;
-
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import static com.rachel.taskManager.util.LogUtils.formatUser;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.*;
 
 import org.slf4j.Logger;
@@ -22,7 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-@Validated
+
 @RestController
 @RequestMapping("/api/projects/{projectId}/tasks") // Tasks belong to a project
 @RequiredArgsConstructor
@@ -31,6 +30,7 @@ public class TaskController {
     private final TaskService taskService;
     private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
 
+    // Get a specific task by ID (no need for projectId here, just taskId)
     @GetMapping("/{taskId}")
     public ResponseEntity<TaskResponseDTO> getTaskById(
             @PathVariable Long taskId,
@@ -39,17 +39,20 @@ public class TaskController {
         return ResponseEntity.ok(taskService.getTaskById(taskId, currentUser));
     }
 
+    // Get all tasks for a specific project
     @GetMapping
     public ResponseEntity<Page<TaskResponseDTO>> getTasks(
             @PathVariable Long projectId,
             @CurrentUser User currentUser,
-            @RequestParam(defaultValue = "0") @Min(0) int page,
-            @RequestParam(defaultValue = "5") @Min(0) @Max(100) int size) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+        ) {
         Pageable pageable = PageRequest.of(page, size);
         Page<TaskResponseDTO> tasks = taskService.getTasksByProjectIdAndUser(projectId, currentUser, pageable);
         return ResponseEntity.ok(tasks);
     }
 
+    // Create a task for a specific project
     @PostMapping
     public ResponseEntity<TaskResponseDTO> createTask(
             @PathVariable Long projectId,
@@ -59,6 +62,7 @@ public class TaskController {
         return ResponseEntity.ok(taskService.createTask(projectId, taskRequestDTO, currentUser));
     }
 
+    // Update a task
     @PutMapping("/{taskId}")
     public ResponseEntity<TaskResponseDTO> updateTask(
             @PathVariable Long taskId,
@@ -68,6 +72,7 @@ public class TaskController {
         return ResponseEntity.ok(taskService.updateTask(taskId, taskRequestDTO, currentUser));
     }
 
+    // Delete a task
     @DeleteMapping("/{taskId}")
     public ResponseEntity<Void> deleteTask(
             @PathVariable Long taskId,
