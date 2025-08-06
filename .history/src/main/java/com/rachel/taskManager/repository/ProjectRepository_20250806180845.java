@@ -9,6 +9,6 @@ import com.rachel.taskManager.model.User;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
-    Page<Project> findByUser(User user, Pageable pageable);
+    Page<Project> findAllByUser(User user, Pageable pageable);
 
 }

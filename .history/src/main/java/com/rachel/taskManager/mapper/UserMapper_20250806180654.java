@@ -21,7 +21,7 @@ public class UserMapper {
 
         dto.setProjects(user.getProjects() != null ?
             user.getProjects().stream()
-                .map(projectMapper::toSummaryDTO)
+                .map(projectMapper::toSummaryDTO) // <-- Use summary mapper
                 .toList()
             : null
         );

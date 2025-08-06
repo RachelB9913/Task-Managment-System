@@ -2,7 +2,6 @@ package com.rachel.taskManager.controller;
 
 import lombok.RequiredArgsConstructor;
 
-import com.rachel.taskManager.dto.PaginatedResponse;
 import com.rachel.taskManager.dto.ProjectRequestDTO;
 import com.rachel.taskManager.dto.ProjectResponseDTO;
 import com.rachel.taskManager.model.User;
@@ -33,27 +32,10 @@ public class ProjectController {
     private final UserService userService;
     private static final Logger logger = LoggerFactory.getLogger(ProjectController.class);
 
-    // @GetMapping("/all")
-    // public ResponseEntity<Page<ProjectResponseDTO>> getAllProjects(Pageable pageable) {
-    //     return ResponseEntity.ok(projectService.getAllProjects(pageable));
-    // }
-
     @GetMapping("/all")
-    public ResponseEntity<PaginatedResponse<ProjectResponseDTO>> getAllProjects(Pageable pageable) {
-        Page<ProjectResponseDTO> page = projectService.getAllProjects(pageable);
-
-        PaginatedResponse<ProjectResponseDTO> response = new PaginatedResponse<>(
-            page.getContent(),
-            page.getNumber(),
-            page.getSize(),
-            page.getTotalElements(),
-            page.getTotalPages(),
-            page.isLast()
-        );
-
-        return ResponseEntity.ok(response);
+    public ResponseEntity<Page<ProjectResponseDTO>> getAllProjects(Pageable pageable) {
+        return ResponseEntity.ok(projectService.getAllProjects(pageable));
     }
-
 
     @GetMapping("/{projectId}")
     public ResponseEntity<ProjectResponseDTO> getProject(@PathVariable Long projectId, @CurrentUser User user) {

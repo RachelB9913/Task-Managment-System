@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -91,7 +90,7 @@ public class UserService {
         return dto;
     }
 
-    public Page<ProjectWithTaskSummaryDTO> getProjectsWithTasks(String sub, Pageable pageable) {
+    public Page<ProjectWithTaskSummaryDTO> getPaginatedProjectsWithTasks(String sub, Pageable pageable) {
         User user = userRepository.findByCognitoSub(sub)
             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
@@ -107,7 +106,7 @@ public class UserService {
                 .map(task -> {
                     TaskSummaryDTO t = new TaskSummaryDTO();
                     t.setTitle(task.getTitle());
-                    t.setStatus(task.getStatus());
+                    t.setStatus(task.getStatus()); // string
                     return t;
                 }).toList();
 

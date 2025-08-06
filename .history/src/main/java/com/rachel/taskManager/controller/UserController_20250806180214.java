@@ -4,9 +4,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.rachel.taskManager.dto.PaginatedResponse;
+import com.rachel.taskManager.dto.ProjectResponseDTO;
 import com.rachel.taskManager.dto.ProjectWithTaskSummaryDTO;
 import com.rachel.taskManager.dto.UserDTO;
+import com.rachel.taskManager.mapper.UserMapper;
 import com.rachel.taskManager.model.User;
 import com.rachel.taskManager.security.CurrentUser;
 import com.rachel.taskManager.service.UserService;
@@ -24,6 +25,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @RequiredArgsConstructor
 public class UserController {
 
+    private final UserMapper userMapper;
     private final UserService userService;
 
     @PreAuthorize("isAuthenticated()")
@@ -33,22 +35,9 @@ public class UserController {
     }
 
     @GetMapping("/me/projects")
-    public ResponseEntity<PaginatedResponse<ProjectWithTaskSummaryDTO>> getProjectsForCurrentUser(
-            @CurrentUser User user,
-            Pageable pageable
-    ) {
-        Page<ProjectWithTaskSummaryDTO> page = userService.getProjectsWithTasks(user.getCognitoSub(), pageable);
-
-        PaginatedResponse<ProjectWithTaskSummaryDTO> response = new PaginatedResponse<>(
-            page.getContent(),
-            page.getNumber(),
-            page.getSize(),
-            page.getTotalElements(),
-            page.getTotalPages(),
-            page.isLast()
-        );
-
-        return ResponseEntity.ok(response);
+    public ResponseEntity<Page<ProjectWithTaskSummaryDTO>> getProjectsForCurrentUser(@CurrentUser User user, Pageable pageable) {
+        Page<ProjectWithTaskSummaryDTO> projects = userService.getProjectsWithTasks(user.getCognitoSub(), pageable);
+        return ResponseEntity.ok(projects);
     }
 
 }

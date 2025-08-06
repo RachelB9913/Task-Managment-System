@@ -95,7 +95,7 @@ public class UserService {
         User user = userRepository.findByCognitoSub(sub)
             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        Page<Project> projectsPage = projectRepository.findByUser(user, pageable);
+        Page<Project> projectsPage = projectRepository.findAllByUser(user, pageable);
 
         return projectsPage.map(project -> {
             ProjectWithTaskSummaryDTO dto = new ProjectWithTaskSummaryDTO();
