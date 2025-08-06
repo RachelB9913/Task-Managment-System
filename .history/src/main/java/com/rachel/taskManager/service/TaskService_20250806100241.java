@@ -24,44 +24,30 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
 
-    private void checkTaskOwnership(Task task, User currentUser) {
-        if (!task.getUser().equals(currentUser)) {
-            throw new SecurityException("Access denied");
-        }
-    }
-    
     public List<TaskResponseDTO> getTasksByProjectIdAndUser(Long projectId, User currentUser) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NoSuchElementException("Project not found"));
 
-        if (!project.getUser().equals(currentUser)) {
-            throw new SecurityException("Access denied");
-        }
-
         return project.getTasks()
                 .stream()
-                .filter(task -> {
-                    checkTaskOwnership(task, currentUser);
-                    return true;
-                })
                 .map(TaskMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
-
-    public TaskResponseDTO getTaskById(Long id, User currentUser) {
-        Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Task not found"));
-        checkTaskOwnership(task, currentUser);
-        return TaskMapper.toDTO(task);
+    public List<Task> getTasks(Long projectId, User currentUser) {
+        return taskRepository.findAllByProjectIdAndUser(projectId, currentUser);
     }
 
+    public TaskResponseDTO getTaskById(Long id, User user) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Task not found"));
+        return TaskMapper.toDTO(task);
+    }
 
     public TaskResponseDTO updateTask(Long id, TaskRequestDTO updatedTaskDTO, User currentUser) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Task not found"));
 
-        checkTaskOwnership(task, currentUser);
         task.setTitle(updatedTaskDTO.getTitle());
         task.setDescription(updatedTaskDTO.getDescription());
         task.setStatus(updatedTaskDTO.getStatus());
@@ -70,26 +56,18 @@ public class TaskService {
         return TaskMapper.toDTO(savedTask);
     }
 
-
     public void deleteTask(Long id, User currentUser) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Task not found"));
-        checkTaskOwnership(task, currentUser);
         taskRepository.delete(task);
     }
 
-    
     public TaskResponseDTO createTask(Long projectId, TaskRequestDTO taskDTO, User currentUser) {
         Project project = projectRepository.findById(projectId)
             .orElseThrow(() -> new RuntimeException("Project not found with id: " + projectId));
 
-        if (!project.getUser().equals(currentUser)) {
-            throw new SecurityException("Access denied");
-        }
-
         Task task = TaskMapper.toEntity(taskDTO);
         task.setProject(project);
-        task.setUser(currentUser);
         Task savedTask = taskRepository.save(task);
         return TaskMapper.toDTO(savedTask);
     }

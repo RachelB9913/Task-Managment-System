@@ -2,6 +2,8 @@ package com.rachel.taskManager.controller;
 
 import com.rachel.taskManager.dto.TaskRequestDTO;
 import com.rachel.taskManager.dto.TaskResponseDTO;
+import com.rachel.taskManager.mapper.TaskMapper;
+import com.rachel.taskManager.model.Task;
 import com.rachel.taskManager.model.User;
 import com.rachel.taskManager.security.CurrentUser;
 import com.rachel.taskManager.service.TaskService;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class TaskController {
 
     private final TaskService taskService;
+    private final TaskMapper taskMapper;
 
     // Get a specific task by ID (no need for projectId here, just taskId)
     @GetMapping("/{taskId}")
