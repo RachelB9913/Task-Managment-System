@@ -35,8 +35,8 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectId}")
-    public ResponseEntity<ProjectResponseDTO> getProject(@PathVariable Long projectId, @CurrentUser User user) {
-        return ResponseEntity.ok(projectService.getProjectById(projectId, user));
+    public ResponseEntity<ProjectResponseDTO> getProject(@PathVariable Long projectId) {
+        return ResponseEntity.ok(projectService.getProjectById(projectId));
     }
 
     @GetMapping("/my-projects")
@@ -48,17 +48,14 @@ public class ProjectController {
     @PostMapping
     public ResponseEntity<ProjectResponseDTO> createProject(@RequestBody ProjectRequestDTO projectDTO,
                                                             @CurrentUser User user) {
-        logger.info("User [{}] requested to create a project", formatUser(user));
         ProjectResponseDTO created = projectService.createProject(projectDTO, user);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{projectId}")
     public ResponseEntity<ProjectResponseDTO> updateProject(@PathVariable Long projectId,
-                                                            @RequestBody ProjectRequestDTO dto,
-                                                            @CurrentUser User user) {
-        logger.info("User [{}] requested to update project {}", formatUser(user), projectId);
-        return ResponseEntity.ok(projectService.updateProject(projectId, dto, user));
+                                                            @RequestBody ProjectRequestDTO dto) {
+        return ResponseEntity.ok(projectService.updateProject(projectId, dto));
     }
 
     @DeleteMapping("/{projectId}")

@@ -29,7 +29,7 @@ public class TaskController {
     public ResponseEntity<TaskResponseDTO> getTaskById(
             @PathVariable Long taskId,
             @CurrentUser User currentUser) {
-        logger.info("User [{}] requested to get task {}", formatUser(currentUser), taskId);
+        logger.info("User [{}] requested to get task {}", currentUser.getMail(), taskId);
         return ResponseEntity.ok(taskService.getTaskById(taskId, currentUser));
     }
 
@@ -50,7 +50,7 @@ public class TaskController {
             @PathVariable Long projectId,
             @RequestBody TaskRequestDTO taskRequestDTO,
             @CurrentUser User currentUser) {
-        logger.info("User [{}] requested to create a task for project {}", formatUser(currentUser), projectId);
+        logger.info("User [{}] is creating a task for project {}", formatUser(currentUser), projectId);
         return ResponseEntity.ok(taskService.createTask(projectId, taskRequestDTO, currentUser));
     }
 
@@ -60,7 +60,6 @@ public class TaskController {
             @PathVariable Long taskId,
             @RequestBody TaskRequestDTO taskRequestDTO,
             @CurrentUser User currentUser) {
-        logger.info("User [{}] requested to update task {}", formatUser(currentUser), taskId);
         return ResponseEntity.ok(taskService.updateTask(taskId, taskRequestDTO, currentUser));
     }
 

@@ -31,7 +31,6 @@ public class TaskService {
 
     private void checkTaskOwnership(Task task, User currentUser) {
         if (!task.getUser().equals(currentUser)) {
-            logger.error("User {} attempted to access task {} without permission", currentUser.getMail(), task.getId());
             throw new SecurityException("Access denied");
         }
     }
@@ -64,7 +63,6 @@ public class TaskService {
 
 
     public TaskResponseDTO updateTask(Long id, TaskRequestDTO updatedTaskDTO, User currentUser) {
-        logger.info("The current user is updating task with id {}", id);
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Task not found"));
 
@@ -74,7 +72,6 @@ public class TaskService {
         task.setStatus(updatedTaskDTO.getStatus());
 
         Task savedTask = taskRepository.save(task);
-        logger.info("Task {} updated successfully by current user", savedTask.getId());
         return TaskMapper.toDTO(savedTask);
     }
 

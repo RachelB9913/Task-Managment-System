@@ -6,7 +6,6 @@ import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 
 import com.rachel.taskManager.model.Project;
-import com.rachel.taskManager.model.Task;
 import com.rachel.taskManager.model.User;
 import com.rachel.taskManager.repository.ProjectRepository;
 import com.rachel.taskManager.dto.ProjectRequestDTO;
@@ -26,13 +25,6 @@ public class ProjectService {
     
     private final ProjectRepository projectRepository;
     private static final Logger logger = LoggerFactory.getLogger(ProjectService.class);
-
-    private void checkProjectOwnership(Project project, User currentUser) {
-        if (!project.getUser().equals(currentUser)) {
-            logger.error("User {} attempted to access project {} without permission", currentUser.getMail(), project.getId());
-            throw new SecurityException("Access denied");
-        }
-    }
     
     public List<ProjectResponseDTO> getAllProjects() {
         return projectRepository.findAll().stream()
@@ -40,11 +32,9 @@ public class ProjectService {
                 .toList();
     }
 
-    public ProjectResponseDTO getProjectById(Long id, User currentUser) {
+    public ProjectResponseDTO getProjectById(Long id) {
         Project project = projectRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Project not found"));
-        checkProjectOwnership(project, currentUser);
-        logger.info("User [{}] accessed project {}", formatUser(currentUser), id);
         return ProjectMapper.toDTO(project);
     }
 
@@ -58,12 +48,10 @@ public class ProjectService {
     }
 
 
-    public ProjectResponseDTO updateProject(Long id, ProjectRequestDTO dto, User user) {
+    public ProjectResponseDTO updateProject(Long id, ProjectRequestDTO dto) {
         logger.info("Current user is updating project with id {}", id);
         Project existing = projectRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Project not found"));
-        
-        checkProjectOwnership(existing, user);
 
         existing.setName(dto.getName());
         existing.setDescription(dto.getDescription());

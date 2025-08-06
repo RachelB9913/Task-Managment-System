@@ -31,7 +31,7 @@ public class TaskService {
 
     private void checkTaskOwnership(Task task, User currentUser) {
         if (!task.getUser().equals(currentUser)) {
-            logger.error("User {} attempted to access task {} without permission", currentUser.getMail(), task.getId());
+            logger.error("User {} attempted to access task {} without permission", currentUser.getId(), task.getId());
             throw new SecurityException("Access denied");
         }
     }

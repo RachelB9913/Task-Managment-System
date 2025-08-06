@@ -47,14 +47,11 @@ public class UserService {
 
     public User getOrCreateUserFromToken(Jwt jwt) {
         logger.info("Attempting to get or create user from JWT token");
-
         String sub = jwt.getClaimAsString("sub");
-
         if (sub == null) {
             logger.error("JWT token does not contain 'sub' claim");
             throw new IllegalArgumentException("Invalid JWT token: 'sub' claim is missing");
         }
-        
         return userRepository.findByCognitoSub(sub)
             .orElseGet(() -> {
                 User user = userMapper.fromJwt(jwt);
