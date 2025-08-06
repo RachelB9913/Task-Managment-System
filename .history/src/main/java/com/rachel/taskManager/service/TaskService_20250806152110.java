@@ -65,7 +65,7 @@ public class TaskService {
 
 
     public TaskResponseDTO updateTask(Long id, TaskRequestDTO updatedTaskDTO, User currentUser) {
-        logger.info("[{}] is updating task with id {}", formatUser(currentUser), id);
+        logger.info("[{}] is updating task with id {}", id);
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Task not found"));
 

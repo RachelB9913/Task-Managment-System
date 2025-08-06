@@ -65,7 +65,7 @@ public class TaskService {
 
 
     public TaskResponseDTO updateTask(Long id, TaskRequestDTO updatedTaskDTO, User currentUser) {
-        logger.info("[{}] is updating task with id {}", formatUser(currentUser), id);
+        logger.info("The current user is updating task with id {}", id);
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Task not found"));
 
@@ -75,7 +75,7 @@ public class TaskService {
         task.setStatus(updatedTaskDTO.getStatus());
 
         Task savedTask = taskRepository.save(task);
-        logger.info("Task {} updated successfully by [{}]", savedTask.getId(), formatUser(savedTask.getUser()));
+        logger.info("Task {} updated successfully by {}", savedTask.getId(), formatUser(savedTask.getUser()));
         return TaskMapper.toDTO(savedTask);
     }
 
@@ -90,12 +90,12 @@ public class TaskService {
         project.getTasks().remove(task);
 
         taskRepository.delete(task);
-        logger.info("Task {} deleted successfully by [{}]", id, formatUser(currentUser));
+        logger.info("Task {} deleted successfully by current user", id);
     }
 
     
     public TaskResponseDTO createTask(Long projectId, TaskRequestDTO taskDTO, User currentUser) {
-        logger.info("[{}] is creating a task in project {}", formatUser(currentUser), projectId);
+        logger.info("Current user is creating a task in project {}", projectId);
 
         Project project = projectRepository.findById(projectId)
             .orElseThrow(() -> new RuntimeException("Project not found with id: " + projectId));
@@ -108,7 +108,7 @@ public class TaskService {
         task.setProject(project);
         task.setUser(currentUser);
         Task savedTask = taskRepository.save(task);
-        logger.info("Task {} created successfully by [{}]", savedTask.getId(), formatUser(currentUser));
+        logger.info("Task {} created successfully by current user", savedTask.getId());
         return TaskMapper.toDTO(savedTask);
     }
 }

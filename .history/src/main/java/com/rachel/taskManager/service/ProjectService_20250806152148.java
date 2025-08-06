@@ -69,7 +69,7 @@ public class ProjectService {
         existing.setDescription(dto.getDescription());
 
         Project updated = projectRepository.save(existing);
-        logger.info("Project {} updated successfully by [{}]", updated.getId(), formatUser(updated.getUser()));
+        logger.info("Project {} updated successfully by {}", updated.getId(), formatUser(updated.getUser()));
         return projectMapper.toDTO(updated);
     }
 
