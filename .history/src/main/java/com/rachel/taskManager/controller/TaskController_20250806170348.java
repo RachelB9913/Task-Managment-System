@@ -10,14 +10,17 @@ import lombok.RequiredArgsConstructor;
 import static com.rachel.taskManager.util.LogUtils.formatUser;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+@Validated
 @RestController
 @RequestMapping("/api/projects/{projectId}/tasks") // Tasks belong to a project
 @RequiredArgsConstructor

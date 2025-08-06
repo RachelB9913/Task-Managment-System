@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-
 @RestController
 @RequestMapping("/api/projects")
 @RequiredArgsConstructor

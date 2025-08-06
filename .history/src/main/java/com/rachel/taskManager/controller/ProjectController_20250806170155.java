@@ -9,7 +9,12 @@ import com.rachel.taskManager.security.CurrentUser;
 import com.rachel.taskManager.service.ProjectService;
 import com.rachel.taskManager.service.UserService;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import org.springframework.validation.annotation.Validated;
+
 import static com.rachel.taskManager.util.LogUtils.formatUser;
+
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -20,9 +25,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-
+@Validated
 @RestController
 @RequestMapping("/api/projects")
 @RequiredArgsConstructor
