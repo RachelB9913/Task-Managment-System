@@ -8,8 +8,10 @@ import com.rachel.taskManager.dto.ProjectResponseDTO;
 import com.rachel.taskManager.model.User;
 import com.rachel.taskManager.security.CurrentUser;
 import com.rachel.taskManager.service.ProjectService;
+import com.rachel.taskManager.service.UserService;
 
 import static com.rachel.taskManager.util.LogUtils.formatUser;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,7 @@ import org.springframework.data.domain.Pageable;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final UserService userService;
     private static final Logger logger = LoggerFactory.getLogger(ProjectController.class);
 
     @GetMapping("/all")
