@@ -1,7 +1,6 @@
 package com.rachel.taskManager.security;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -49,9 +48,11 @@ public class SecurityConfig {
             return groups.stream()
                 .map(group -> "ROLE_" + group.toUpperCase())
                 .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+                .collect(java.util.stream.Collectors.toList());
         });
         return converter;
     }
+
+
 }
 
