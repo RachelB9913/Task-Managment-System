@@ -37,9 +37,6 @@ public class UserServiceTest {
         MockitoAnnotations.openMocks(this);
         user = new User("abc123", "user@example.com");
         user.setAdmin(false);
-        userService = Mockito.spy(userService);
-        doNothing().when(userService).deleteUserFromCognito(anyString());
-        doNothing().when(userService).updateUserRoleInCognito(anyString(), anyString());
     }
 
     @Test

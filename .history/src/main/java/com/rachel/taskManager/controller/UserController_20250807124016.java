@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.rachel.taskManager.dto.PaginatedResponse;
 import com.rachel.taskManager.dto.ProjectWithTaskSummaryDTO;
-import com.rachel.taskManager.dto.UpdateRoleRequest;
 import com.rachel.taskManager.dto.UserDTO;
 import com.rachel.taskManager.model.User;
 import com.rachel.taskManager.security.CurrentUser;
@@ -75,8 +74,8 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{sub}/role")
-    public ResponseEntity<Void> updateUserRole(@PathVariable String sub, @RequestBody UpdateRoleRequest request) {
-        userService.updateUserRole(sub, request.getNewRole());
+    public ResponseEntity<Void> updateUserRole(@PathVariable String sub, @RequestBody String newRole) {
+        userService.updateUserRole(sub, newRole);
         return ResponseEntity.noContent().build();
     }
 

@@ -29,6 +29,9 @@ public class UserServiceTest {
     @Mock private ProjectMapper projectMapper;
 
     @InjectMocks private UserService userService;
+    
+    @Spy
+    private UserService spyUserService;
 
     private User user;
 

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.rachel.taskManager.dto.PaginatedResponse;
 import com.rachel.taskManager.dto.ProjectWithTaskSummaryDTO;
-import com.rachel.taskManager.dto.UpdateRoleRequest;
 import com.rachel.taskManager.dto.UserDTO;
 import com.rachel.taskManager.model.User;
 import com.rachel.taskManager.security.CurrentUser;

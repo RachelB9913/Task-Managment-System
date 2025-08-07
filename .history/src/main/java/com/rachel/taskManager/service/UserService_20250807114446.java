@@ -27,9 +27,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminDeleteUserRequest;
-
 
 @Service
 @RequiredArgsConstructor
@@ -124,51 +121,5 @@ public class UserService {
         return users.stream()
             .map(userMapper::toDTO)
             .toList();
-    }
-
-    public void deleteUserFromCognito(String username) {
-        try (CognitoIdentityProviderClient cognitoClient = CognitoIdentityProviderClient.create()) {
-            AdminDeleteUserRequest deleteUserRequest = AdminDeleteUserRequest.builder()
-                .userPoolId("eu-north-1_LBRgh68wz")
-                .username(username)
-                .build();
-            cognitoClient.adminDeleteUser(deleteUserRequest);
-        }
-    }
-
-    public void deleteUser(String sub) {
-        User user = userRepository.findByCognitoSub(sub)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        // Delete from Cognito
-        deleteUserFromCognito(user.getCognitoSub());
-        // Delete from local DB
-        userRepository.deleteById(user.getCognitoSub());
-    }
-
-    public void updateUserRole(String sub, String newRole) {
-        User user = userRepository.findByCognitoSub(sub)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        boolean isAdmin = "ADMIN".equalsIgnoreCase(newRole);
-        user.setAdmin(isAdmin);
-        userRepository.save(user);
-        // Optionally update Cognito custom attribute for role
-        updateUserRoleInCognito(user.getCognitoSub(), newRole);
-    }
-
-    public void updateUserRoleInCognito(String username, String newRole) {
-        try (CognitoIdentityProviderClient cognitoClient = CognitoIdentityProviderClient.create()) {
-            software.amazon.awssdk.services.cognitoidentityprovider.model.AdminUpdateUserAttributesRequest req =
-                software.amazon.awssdk.services.cognitoidentityprovider.model.AdminUpdateUserAttributesRequest.builder()
-                    .userPoolId("eu-north-1_LBRgh68wz")
-                    .username(username)
-                    .userAttributes(
-                        software.amazon.awssdk.services.cognitoidentityprovider.model.AttributeType.builder()
-                            .name("custom:role")
-                            .value(newRole)
-                            .build()
-                    )
-                    .build();
-            cognitoClient.adminUpdateUserAttributes(req);
-        }
     }
 }

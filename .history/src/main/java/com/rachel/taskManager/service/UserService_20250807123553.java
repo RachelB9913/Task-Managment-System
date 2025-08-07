@@ -31,6 +31,7 @@ import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityPr
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminDeleteUserRequest;
 
 
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -136,17 +137,17 @@ public class UserService {
         }
     }
 
-    public void deleteUser(String sub) {
-        User user = userRepository.findByCognitoSub(sub)
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId)
             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         // Delete from Cognito
         deleteUserFromCognito(user.getCognitoSub());
         // Delete from local DB
-        userRepository.deleteById(user.getCognitoSub());
+        userRepository.deleteById(userId);
     }
 
-    public void updateUserRole(String sub, String newRole) {
-        User user = userRepository.findByCognitoSub(sub)
+    public void updateUserRole(Long userId, String newRole) {
+        User user = userRepository.findById(userId)
             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         boolean isAdmin = "ADMIN".equalsIgnoreCase(newRole);
         user.setAdmin(isAdmin);
@@ -156,6 +157,8 @@ public class UserService {
     }
 
     public void updateUserRoleInCognito(String username, String newRole) {
+        // If you have a custom attribute for role, update it here
+        // Example: update custom:role attribute
         try (CognitoIdentityProviderClient cognitoClient = CognitoIdentityProviderClient.create()) {
             software.amazon.awssdk.services.cognitoidentityprovider.model.AdminUpdateUserAttributesRequest req =
                 software.amazon.awssdk.services.cognitoidentityprovider.model.AdminUpdateUserAttributesRequest.builder()
@@ -171,4 +174,5 @@ public class UserService {
             cognitoClient.adminUpdateUserAttributes(req);
         }
     }
+    
 }

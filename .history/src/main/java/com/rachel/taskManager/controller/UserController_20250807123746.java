@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.rachel.taskManager.dto.PaginatedResponse;
 import com.rachel.taskManager.dto.ProjectWithTaskSummaryDTO;
-import com.rachel.taskManager.dto.UpdateRoleRequest;
 import com.rachel.taskManager.dto.UserDTO;
 import com.rachel.taskManager.model.User;
 import com.rachel.taskManager.security.CurrentUser;
@@ -67,16 +66,16 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{sub}")
-    public ResponseEntity<Void> deleteUser(@PathVariable String sub) {
-        userService.deleteUser(sub);
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
+        userService.deleteUser(userId);
         return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/{sub}/role")
-    public ResponseEntity<Void> updateUserRole(@PathVariable String sub, @RequestBody UpdateRoleRequest request) {
-        userService.updateUserRole(sub, request.getNewRole());
+    @PutMapping("/{userId}/role")
+    public ResponseEntity<Void> updateUserRole(@PathVariable Long userId, @RequestBody String newRole) {
+        userService.updateUserRole(userId, newRole);
         return ResponseEntity.noContent().build();
     }
 

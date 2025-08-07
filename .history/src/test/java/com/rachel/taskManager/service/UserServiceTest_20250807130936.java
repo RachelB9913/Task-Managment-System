@@ -1,3 +1,35 @@
+    @Test
+    public void testDeleteUser_Success() {
+        user.setCognitoSub("abc123");
+        when(userRepository.findByCognitoSub("abc123")).thenReturn(Optional.of(user));
+        doNothing().when(userRepository).deleteById("abc123");
+        // deleteUserFromCognito is not mocked, but should not throw
+        userService.deleteUser("abc123");
+        verify(userRepository).deleteById("abc123");
+    }
+
+    @Test
+    public void testDeleteUser_NotFound() {
+        when(userRepository.findByCognitoSub("abc123")).thenReturn(Optional.empty());
+        assertThrows(UsernameNotFoundException.class, () -> userService.deleteUser("abc123"));
+    }
+
+    @Test
+    public void testUpdateUserRole_Success() {
+        user.setCognitoSub("abc123");
+        when(userRepository.findByCognitoSub("abc123")).thenReturn(Optional.of(user));
+        when(userRepository.save(user)).thenReturn(user);
+        // updateUserRoleInCognito is not mocked, but should not throw
+        userService.updateUserRole("abc123", "ADMIN");
+        assertTrue(user.isAdmin());
+        verify(userRepository).save(user);
+    }
+
+    @Test
+    public void testUpdateUserRole_NotFound() {
+        when(userRepository.findByCognitoSub("abc123")).thenReturn(Optional.empty());
+        assertThrows(UsernameNotFoundException.class, () -> userService.updateUserRole("abc123", "ADMIN"));
+    }
 package com.rachel.taskManager.service;
 
 import com.rachel.taskManager.dto.*;
@@ -37,9 +69,6 @@ public class UserServiceTest {
         MockitoAnnotations.openMocks(this);
         user = new User("abc123", "user@example.com");
         user.setAdmin(false);
-        userService = Mockito.spy(userService);
-        doNothing().when(userService).deleteUserFromCognito(anyString());
-        doNothing().when(userService).updateUserRoleInCognito(anyString(), anyString());
     }
 
     @Test
