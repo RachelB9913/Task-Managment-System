@@ -1,5 +1,5 @@
 # Assignment Overview
-*Rachel Belokopytov*
+Rachel Belokopytov
 
 
 **Project Title:** Task Management System with AWS Cognito and Role-Based Access
