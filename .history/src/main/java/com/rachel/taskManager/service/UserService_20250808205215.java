@@ -155,47 +155,47 @@ public class UserService {
 
 
     public void updateUserRole(String sub, String newRole) {
-        String normalized = newRole == null ? "" : newRole.trim().toUpperCase();
-        if (!normalized.equals("ADMIN") && !normalized.equals("USER")) {
-            throw new IllegalArgumentException("newRole must be ADMIN or USER");
-        }
-
         User user = userRepository.findByCognitoSub(sub)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        user.setAdmin("ADMIN".equals(normalized));
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        boolean isAdmin = "ADMIN".equalsIgnoreCase(newRole);
+        user.setAdmin(isAdmin);
         userRepository.save(user);
-
-        updateUserRoleInCognito(user.getCognitoSub(), normalized);
+        // Optionally update Cognito custom attribute for role
+        updateUserRoleInCognito(user.getCognitoSub(), newRole);
     }
 
+    
     public void updateUserRoleInCognito(String sub, String newRole) {
-        // update custom attribute
-        var updateReq = AdminUpdateUserAttributesRequest.builder()
+        try (CognitoIdentityProviderClient cognitoClient = CognitoIdentityProviderClient.create()) {
+            // Update custom:role attribute
+            AdminUpdateUserAttributesRequest updateReq = AdminUpdateUserAttributesRequest.builder()
                 .userPoolId("eu-north-1_LBRgh68wz")
                 .username(sub)
-                .userAttributes(AttributeType.builder()
+                .userAttributes(
+                    AttributeType.builder()
                         .name("custom:role")
                         .value(newRole)
-                        .build())
+                        .build()
+                )
                 .build();
-        cognitoClient.adminUpdateUserAttributes(updateReq);
+            cognitoClient.adminUpdateUserAttributes(updateReq);
 
-        // manage group membership
-        if ("ADMIN".equalsIgnoreCase(newRole)) {
-            var addReq = AdminAddUserToGroupRequest.builder()
+            // Manage ADMIN group membership
+            if ("ADMIN".equalsIgnoreCase(newRole)) {
+                AdminAddUserToGroupRequest addReq = AdminAddUserToGroupRequest.builder()
                     .userPoolId("eu-north-1_LBRgh68wz")
                     .username(sub)
                     .groupName("ADMIN")
                     .build();
-            cognitoClient.adminAddUserToGroup(addReq);
-        } else { // treat anything else as USER - remove from ADMIN
-            var removeReq = AdminRemoveUserFromGroupRequest.builder()
+                cognitoClient.adminAddUserToGroup(addReq);
+            } else if ("USER".equalsIgnoreCase(newRole)) {
+                AdminRemoveUserFromGroupRequest removeReq = AdminRemoveUserFromGroupRequest.builder()
                     .userPoolId("eu-north-1_LBRgh68wz")
                     .username(sub)
                     .groupName("ADMIN")
                     .build();
-            cognitoClient.adminRemoveUserFromGroup(removeReq);
+                cognitoClient.adminRemoveUserFromGroup(removeReq);
+            }
         }
     }
 }

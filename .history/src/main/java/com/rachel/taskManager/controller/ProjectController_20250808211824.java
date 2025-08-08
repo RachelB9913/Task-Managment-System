@@ -80,6 +80,6 @@ public class ProjectController {
     @DeleteMapping("/{projectId}")
     public ResponseEntity<Void> deleteProject(@PathVariable Long projectId, @CurrentUser User user) {
         projectService.deleteProject(projectId, user);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }

@@ -79,7 +79,7 @@ class ProjectControllerTest {
 
         ResponseEntity<Void> response = projectController.deleteProject(projectId, user);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNull();
         verify(projectService, times(1)).deleteProject(projectId, user);
     }

@@ -80,7 +80,7 @@ public class TaskController {
             @CurrentUser User currentUser) {
         logger.info("User [{}] requested to delete task {}", formatUser(currentUser), taskId);
         taskService.deleteTask(taskId, currentUser);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
 }

@@ -37,27 +37,36 @@ public class SecurityConfig {
         return http.build();
     }
 
-    
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
-        var groupsConverter = new JwtGrantedAuthoritiesConverter();
-        groupsConverter.setAuthoritiesClaimName("cognito:groups");
-        groupsConverter.setAuthorityPrefix("ROLE_");
+        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        grantedAuthoritiesConverter.setAuthoritiesClaimName("cognito:groups");
+        grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
 
-        var jwtAuthConverter = new JwtAuthenticationConverter();
-        jwtAuthConverter.setJwtGrantedAuthoritiesConverter(jwt -> {
-            var auths = new java.util.ArrayList<org.springframework.security.core.GrantedAuthority>();
-
-            // Default role for any authenticated user
-            auths.add(new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_USER"));
-
-            // Add roles from Cognito groups (e.g., ADMIN)
-            auths.addAll(groupsConverter.convert(jwt));
-
-            return auths;
-        });
-        return jwtAuthConverter;
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
+        return jwtAuthenticationConverter;
     }
+    // @Bean
+    // public JwtAuthenticationConverter jwtAuthenticationConverter() {
+    //     var groupsConverter = new JwtGrantedAuthoritiesConverter();
+    //     groupsConverter.setAuthoritiesClaimName("cognito:groups");
+    //     groupsConverter.setAuthorityPrefix("ROLE_");
+
+    //     var jwtAuthConverter = new JwtAuthenticationConverter();
+    //     jwtAuthConverter.setJwtGrantedAuthoritiesConverter(jwt -> {
+    //         var auths = new java.util.ArrayList<org.springframework.security.core.GrantedAuthority>();
+
+    //         // Default role for any authenticated user
+    //         auths.add(new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_USER"));
+
+    //         // Add roles from Cognito groups (e.g., ADMIN)
+    //         auths.addAll(groupsConverter.convert(jwt));
+
+    //         return auths;
+    //     });
+    //     return jwtAuthConverter;
+    // }
 
 }
 

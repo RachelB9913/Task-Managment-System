@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.rachel.taskManager.model.Project;
 import com.rachel.taskManager.model.User;
 import com.rachel.taskManager.repository.ProjectRepository;
+import com.rachel.taskManager.repository.TaskRepository;
 import com.rachel.taskManager.dto.ProjectRequestDTO;
 import com.rachel.taskManager.dto.ProjectResponseDTO;
 import com.rachel.taskManager.mapper.ProjectMapper;
@@ -28,6 +29,7 @@ public class ProjectService {
     
     private final ProjectRepository projectRepository;
     private final ProjectMapper projectMapper;
+    private final TaskRepository taskRepository;
     private static final Logger logger = LoggerFactory.getLogger(ProjectService.class);
 
     private void checkProjectOwnershipOrAdmin(Project project, User currentUser) {
@@ -93,12 +95,11 @@ public class ProjectService {
             .orElseThrow(() -> new NoSuchElementException("Project not found"));
 
         checkProjectOwnershipOrAdmin(project, currentUser);
-        logger.info("User [{}] is deleting project {}", formatUser(currentUser), id);
 
         // Remove the project from the owner's collection
         User owner = project.getUser();
         owner.getProjects().remove(project);
-        projectRepository.delete(project);
+        
     }
 
 

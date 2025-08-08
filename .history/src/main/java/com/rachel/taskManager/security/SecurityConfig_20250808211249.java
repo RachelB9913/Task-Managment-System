@@ -37,7 +37,16 @@ public class SecurityConfig {
         return http.build();
     }
 
-    
+    // @Bean
+    // public JwtAuthenticationConverter jwtAuthenticationConverter() {
+    //     JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+    //     grantedAuthoritiesConverter.setAuthoritiesClaimName("cognito:groups");
+    //     grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+
+    //     JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+    //     jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
+    //     return jwtAuthenticationConverter;
+    // }
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         var groupsConverter = new JwtGrantedAuthoritiesConverter();
