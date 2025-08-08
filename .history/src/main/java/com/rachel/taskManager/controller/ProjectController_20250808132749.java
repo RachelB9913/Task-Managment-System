@@ -31,11 +31,11 @@ public class ProjectController {
     private final ProjectService projectService;
     private static final Logger logger = LoggerFactory.getLogger(ProjectController.class);
 
-
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/all")
     public ResponseEntity<PaginatedResponse<ProjectResponseDTO>> getAllProjects(Pageable pageable) {
         Page<ProjectResponseDTO> page = projectService.getAllProjects(pageable);
+
         PaginatedResponse<ProjectResponseDTO> response = new PaginatedResponse<>(
             page.getContent(),
             page.getNumber(),
@@ -44,18 +44,15 @@ public class ProjectController {
             page.getTotalPages(),
             page.isLast()
         );
+
         return ResponseEntity.ok(response);
     }
 
-
-    @PreAuthorize("hasRole('ADMIN') or #user.cognitoSub == authentication.name")
     @GetMapping("/{projectId}")
     public ResponseEntity<ProjectResponseDTO> getProject(@PathVariable Long projectId, @CurrentUser User user) {
         return ResponseEntity.ok(projectService.getProjectById(projectId, user));
     }
 
-
-    @PreAuthorize("hasRole('ADMIN') or #user.cognitoSub == authentication.name")
     @PostMapping
     public ResponseEntity<ProjectResponseDTO> createProject(@RequestBody ProjectRequestDTO projectDTO,
                                                             @CurrentUser User user) {
@@ -64,8 +61,6 @@ public class ProjectController {
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-
-    @PreAuthorize("hasRole('ADMIN') or #user.cognitoSub == authentication.name")
     @PutMapping("/{projectId}")
     public ResponseEntity<ProjectResponseDTO> updateProject(@PathVariable Long projectId,
                                                             @RequestBody ProjectRequestDTO dto,
@@ -74,10 +69,9 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.updateProject(projectId, dto, user));
     }
 
-    @PreAuthorize("hasRole('ADMIN') or #user.cognitoSub == authentication.name")
     @DeleteMapping("/{projectId}")
-    public ResponseEntity<Void> deleteProject(@PathVariable Long projectId, @CurrentUser User user) {
-        projectService.deleteProject(projectId, user);
+    public ResponseEntity<Void> deleteProject(@PathVariable Long projectId) {
+        projectService.deleteProject(projectId);
         return ResponseEntity.noContent().build();
     }
 }

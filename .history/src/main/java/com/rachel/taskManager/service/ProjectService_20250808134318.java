@@ -30,7 +30,7 @@ public class ProjectService {
     private static final Logger logger = LoggerFactory.getLogger(ProjectService.class);
 
     private void checkProjectOwnershipOrAdmin(Project project, User currentUser) {
-        boolean isAdmin = currentUser.isAdmin();
+        boolean isAdmin = currentUser.getRole() != null && currentUser.getRole().equalsIgnoreCase("ADMIN");
         if (!isAdmin && !project.getUser().equals(currentUser)) {
             logger.error("User {} attempted to access project {} without permission", currentUser.getMail(), project.getId());
             throw new SecurityException("Access denied");

@@ -56,5 +56,3 @@ I hope this project shows that I am capable of learning quickly, adapting to new
 
 
 #TODO - to add explanation about the ADMIN/USER. basic concept.
-i want each user to be able to add a project and tasks and modify and delete if cancelled but the admin to be able to see the data of all users or all projects and to have pemission to add or change something if a certain user struggles with it.
-

@@ -212,13 +212,10 @@ class ProjectControllerWebMvcTest {
                 .andExpect(status().isUnauthorized());
     }
 
-
     @Test
     void deleteProject_notFound_returnsNotFound() throws Exception {
         Long projectId = 999L;
-        com.rachel.taskManager.model.User mockUser = new com.rachel.taskManager.model.User();
-        Mockito.doThrow(new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND)).when(projectService).deleteProject(eq(projectId), any(com.rachel.taskManager.model.User.class));
-        when(userService.getOrCreateUserFromToken(any())).thenReturn(mockUser);
+        Mockito.doThrow(new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND)).when(projectService).deleteProject(projectId);
         Jwt jwt = Jwt.withTokenValue("token").header("alg", "none").claim("sub", "testuser").build();
         mockMvc.perform(delete("/api/projects/{projectId}", projectId)
                 .with(csrf())
