@@ -4,6 +4,7 @@ import com.rachel.taskManager.dto.PaginatedResponse;
 import com.rachel.taskManager.dto.ProjectResponseDTO;
 import com.rachel.taskManager.dto.TaskResponseDTO;
 import com.rachel.taskManager.dto.UserDTO;
+import com.rachel.taskManager.dto.UpdateRoleRequest;
 import com.rachel.taskManager.service.ProjectService;
 import com.rachel.taskManager.service.TaskService;
 import com.rachel.taskManager.service.UserService;
@@ -85,10 +86,10 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/users/{sub}/role/{newRole}")
-    public ResponseEntity<String> updateUserRole(@PathVariable String sub, @PathVariable String newRole) {
-        userService.updateUserRole(sub, newRole);
-        return ResponseEntity.ok(String.format("User %s role changed to %s successfully.", sub, newRole));
+    @PreAuthorize("hasRole('ADMIN')")  //TODO -understand
+    @PutMapping("/users/{sub}/role")
+    public ResponseEntity<Void> updateUserRole(@PathVariable String sub, @RequestBody UpdateRoleRequest request) {
+        userService.updateUserRole(sub, request.getNewRole());
+        return ResponseEntity.noContent().build();
     }
 }

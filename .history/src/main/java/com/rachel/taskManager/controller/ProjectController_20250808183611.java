@@ -14,9 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Page;
-import com.rachel.taskManager.dto.PaginatedResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,11 +44,9 @@ public class ProjectController {
         return ResponseEntity.ok(response);
     }
 
-
     @PreAuthorize("hasRole('ADMIN') or #user.cognitoSub == authentication.name")
     @GetMapping("/{projectId}")
     public ResponseEntity<ProjectResponseDTO> getProject(@PathVariable Long projectId, @CurrentUser User user) {
-        logger.info("User [{}] requested project {}", formatUser(user), projectId);
         return ResponseEntity.ok(projectService.getProjectById(projectId, user));
     }
 
@@ -78,9 +73,8 @@ public class ProjectController {
     
     @PreAuthorize("hasRole('ADMIN') or #user.cognitoSub == authentication.name")
     @DeleteMapping("/{projectId}")
-    public ResponseEntity<String> deleteProject(@PathVariable Long projectId, @CurrentUser User user) {
+    public ResponseEntity<Void> deleteProject(@PathVariable Long projectId, @CurrentUser User user) {
         projectService.deleteProject(projectId, user);
-        String message = String.format("Project %d deleted successfully.", projectId);
-        return ResponseEntity.ok(message);
+        return ResponseEntity.noContent().build();
     }
 }

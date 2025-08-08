@@ -1,10 +1,12 @@
 package com.rachel.taskManager.service;
 
+import java.util.HashSet;
 import java.util.NoSuchElementException;
 
 import org.springframework.stereotype.Service;
 
 import com.rachel.taskManager.model.Project;
+import com.rachel.taskManager.model.Task;
 import com.rachel.taskManager.model.User;
 import com.rachel.taskManager.repository.ProjectRepository;
 import com.rachel.taskManager.repository.TaskRepository;
@@ -89,6 +91,55 @@ public class ProjectService {
     }
 
 
+    // @Transactional
+    // public void deleteProject(Long id, User user) {
+    //     Project project = projectRepository.findById(id)
+    //             .orElseThrow(() -> new NoSuchElementException("Project not found"));
+    //     checkProjectOwnershipOrAdmin(project, user);
+    //     // Remove all tasks explicitly to ensure orphan removal
+    //     logger.info("[DB STATE] Projects in DB before: {} | Tasks in DB: {}", projectRepository.count(), taskRepository.count());
+
+    //     project.getTasks().clear();
+    //     projectRepository.save(project);
+    //     projectRepository.delete(project);
+        
+    //     logger.info("[DB STATE] Projects in DB after: {} | Tasks in DB: {}", projectRepository.count(), taskRepository.count());
+    //     // logger.info("Project {} deleted successfully by [{}]", id, formatUser(user));
+    //     if (projectRepository.existsById(id)) {
+    //         logger.error("Project {} was not deleted from the database!", id);
+    //         throw new IllegalStateException("Project was not deleted");
+    //     }
+    // }
+
+    @Transactional
+    public void deleteProject(Long id, User user) {
+        Project project = projectRepository.findById(id)
+            .orElseThrow(() -> new NoSuchElementException("Project not found"));
+        checkProjectOwnershipOrAdmin(project, user);
+
+        logger.info("[DB STATE] Projects in DB before: {} | Tasks in DB before: {}", projectRepository.count(), taskRepository.count());
+
+        // Remove and delete all tasks associated with this project
+        logger.info("number of tasks to delete: {}", project.getTasks().size());
+
+        for (Task task : new HashSet<>(project.getTasks())) {
+            project.getTasks().remove(task);
+            taskRepository.delete(task);
+        }
+        taskRepository.flush(); // Force DB sync
+
+        logger.info("number of tasks after deletion: {}", project.getTasks().size());
+        projectRepository.delete(project);
+        projectRepository.flush(); // Ensure the project is removed from the persistence context
+
+        logger.info("[DB STATE] Projects in DB after: {} | Tasks in DB after: {}", projectRepository.count(), taskRepository.count());
+
+        if (projectRepository.existsById(id)) {
+            logger.error("Project {} was not deleted from the database!", id);
+            throw new IllegalStateException("Project was not deleted");
+        }
+    }
+
     @Transactional
     public void deleteProject(Long id, User currentUser) {
         Project project = projectRepository.findById(id)
@@ -97,11 +148,22 @@ public class ProjectService {
         checkProjectOwnershipOrAdmin(project, currentUser);
         logger.info("[DB STATE] Projects in DB before: {} | Tasks in DB before: {}", projectRepository.count(), taskRepository.count());
 
-        // Remove the project from the owner's collection
-        User owner = project.getUser();
-        owner.getProjects().remove(project);
+        // 1) (Optional but safe) clear tasks so no heavy loads; orphanRemoval on Project.tasks handles it
+        //    If you want to be explicit/bulk:
+        // taskRepository.deleteByProjectId(id);
+
+        // 2) Remove the project from the owner's collection -> orphanRemoval deletes it
+        User owner = project.getUser();               // owner is managed
+        owner.getProjects().remove(project);          // <-- THIS is the key line
         
         logger.info("[DB STATE] Projects in DB after: {} | Tasks in DB after: {}", projectRepository.count(), taskRepository.count());
+
+        // User owner = project.getUser();
+        // owner.getProjects().remove(project);  // break parent->child link
+        // projectRepository.delete(project);     // now it can be deleted
+
+        // 3) No need to call projectRepository.delete(project);
+        // Hibernate will delete the project on flush/commit due to orphanRemoval.
     }
 
 

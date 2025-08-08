@@ -77,7 +77,7 @@ class ProjectControllerTest {
         User user = mock(User.class);
         doNothing().when(projectService).deleteProject(projectId, user);
 
-        ResponseEntity<String> response = projectController.deleteProject(projectId, user);
+        ResponseEntity<Void> response = projectController.deleteProject(projectId, user);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(String.format("Project %d deleted successfully.", projectId));

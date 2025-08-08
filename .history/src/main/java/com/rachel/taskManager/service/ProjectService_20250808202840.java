@@ -88,7 +88,7 @@ public class ProjectService {
         return projectMapper.toDTO(updated);
     }
 
-
+    
     @Transactional
     public void deleteProject(Long id, User currentUser) {
         Project project = projectRepository.findById(id)
@@ -102,6 +102,11 @@ public class ProjectService {
         owner.getProjects().remove(project);
         
         logger.info("[DB STATE] Projects in DB after: {} | Tasks in DB after: {}", projectRepository.count(), taskRepository.count());
+
+        if (projectRepository.existsById(id)) {
+            logger.error("Project {} was not deleted from the database!", id);
+            throw new IllegalStateException("Project was not deleted");
+        }
     }
 
 

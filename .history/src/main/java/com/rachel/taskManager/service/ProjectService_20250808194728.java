@@ -89,20 +89,32 @@ public class ProjectService {
     }
 
 
+    // @Transactional
+    // public void deleteProject(Long id, User user) {
+    //     Project project = projectRepository.findById(id)
+    //             .orElseThrow(() -> new NoSuchElementException("Project not found"));
+    //     checkProjectOwnershipOrAdmin(project, user);
+    //     // Remove all tasks explicitly to ensure orphan removal
+    //     project.getTasks().clear();
+    //     projectRepository.save(project);
+    //     projectRepository.delete(project);
+    //     logger.info("Project {} deleted successfully by [{}]", id, formatUser(user));
+    //     if (projectRepository.existsById(id)) {
+    //         logger.error("Project {} was not deleted from the database!", id);
+    //         throw new IllegalStateException("Project was not deleted");
+    //     }
+    // }
     @Transactional
-    public void deleteProject(Long id, User currentUser) {
+    public void deleteProject(Long id, User user) {
         Project project = projectRepository.findById(id)
             .orElseThrow(() -> new NoSuchElementException("Project not found"));
-
-        checkProjectOwnershipOrAdmin(project, currentUser);
-        logger.info("[DB STATE] Projects in DB before: {} | Tasks in DB before: {}", projectRepository.count(), taskRepository.count());
-
-        // Remove the project from the owner's collection
-        User owner = project.getUser();
-        owner.getProjects().remove(project);
+        checkProjectOwnershipOrAdmin(project, user);
+        logger.info("[DB STATE] Projects in DB: {} | Tasks in DB: {}", projectRepository.count(), taskRepository.count());
         
-        logger.info("[DB STATE] Projects in DB after: {} | Tasks in DB after: {}", projectRepository.count(), taskRepository.count());
+        projectRepository.delete(project);   // children will be deleted via orphanRemoval
+        projectRepository.flush();           // force SQL now (so existsById won’t lie)
+        
+        logger.info("[DB STATE] Projects in DB: {} | Tasks in DB: {}", projectRepository.count(), taskRepository.count());
     }
-
 
 }

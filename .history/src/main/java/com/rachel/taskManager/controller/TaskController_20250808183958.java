@@ -75,12 +75,12 @@ public class TaskController {
 
     @PreAuthorize("hasRole('ADMIN') or #currentUser.cognitoSub == authentication.name")
     @DeleteMapping("/{taskId}")
-    public ResponseEntity<String> deleteTask(
+    public ResponseEntity<Void> deleteTask(
             @PathVariable Long taskId,
             @CurrentUser User currentUser) {
         logger.info("User [{}] requested to delete task {}", formatUser(currentUser), taskId);
         taskService.deleteTask(taskId, currentUser);
-        return ResponseEntity.ok(String.format("Task %d deleted successfully.", taskId));
+        return ResponseEntity.noContent().build();
     }
 
 }

@@ -88,6 +88,34 @@ public class ProjectService {
         return projectMapper.toDTO(updated);
     }
 
+    // @Transactional
+    // public void deleteProject(Long id, User user) {
+    //     Project project = projectRepository.findById(id)
+    //         .orElseThrow(() -> new NoSuchElementException("Project not found"));
+    //     checkProjectOwnershipOrAdmin(project, user);
+
+    //     logger.info("[DB STATE] Projects in DB before: {} | Tasks in DB before: {}", projectRepository.count(), taskRepository.count());
+
+    //     // Remove and delete all tasks associated with this project
+    //     logger.info("number of tasks to delete: {}", project.getTasks().size());
+
+    //     for (Task task : new HashSet<>(project.getTasks())) {
+    //         project.getTasks().remove(task);
+    //         taskRepository.delete(task);
+    //     }
+    //     taskRepository.flush(); // Force DB sync
+
+    //     logger.info("number of tasks after deletion: {}", project.getTasks().size());
+    //     projectRepository.delete(project);
+    //     projectRepository.flush(); // Ensure the project is removed from the persistence context
+
+    //     logger.info("[DB STATE] Projects in DB after: {} | Tasks in DB after: {}", projectRepository.count(), taskRepository.count());
+
+    //     if (projectRepository.existsById(id)) {
+    //         logger.error("Project {} was not deleted from the database!", id);
+    //         throw new IllegalStateException("Project was not deleted");
+    //     }
+    // }
 
     @Transactional
     public void deleteProject(Long id, User currentUser) {
@@ -102,6 +130,11 @@ public class ProjectService {
         owner.getProjects().remove(project);
         
         logger.info("[DB STATE] Projects in DB after: {} | Tasks in DB after: {}", projectRepository.count(), taskRepository.count());
+
+        if (projectRepository.existsById(id)) {
+            logger.error("Project {} was not deleted from the database!", id);
+            throw new IllegalStateException("Project was not deleted");
+        }
     }
 
 

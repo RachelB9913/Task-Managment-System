@@ -13,6 +13,7 @@ import com.rachel.taskManager.repository.ProjectRepository;
 import com.rachel.taskManager.repository.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -25,14 +26,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminAddUserToGroupRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminDeleteUserRequest;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminRemoveUserFromGroupRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminUpdateUserAttributesRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AttributeType;
 
+
 @Service
-@lombok.RequiredArgsConstructor
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
@@ -164,37 +164,20 @@ public class UserService {
     }
 
     
-    public void updateUserRoleInCognito(String sub, String newRole) {
+    public void updateUserRoleInCognito(String username, String newRole) {
         try (CognitoIdentityProviderClient cognitoClient = CognitoIdentityProviderClient.create()) {
-            // Update custom:role attribute
-            AdminUpdateUserAttributesRequest updateReq = AdminUpdateUserAttributesRequest.builder()
-                .userPoolId("eu-north-1_LBRgh68wz")
-                .username(sub)
-                .userAttributes(
-                    AttributeType.builder()
-                        .name("custom:role")
-                        .value(newRole)
-                        .build()
-                )
-                .build();
-            cognitoClient.adminUpdateUserAttributes(updateReq);
-
-            // Manage ADMIN group membership
-            if ("ADMIN".equalsIgnoreCase(newRole)) {
-                AdminAddUserToGroupRequest addReq = AdminAddUserToGroupRequest.builder()
+            AdminUpdateUserAttributesRequest req =
+                AdminUpdateUserAttributesRequest.builder()
                     .userPoolId("eu-north-1_LBRgh68wz")
-                    .username(sub)
-                    .groupName("ADMIN")
+                    .username(username)
+                    .userAttributes(
+                        AttributeType.builder()
+                            .name("custom:role")
+                            .value(newRole)
+                            .build()
+                    )
                     .build();
-                cognitoClient.adminAddUserToGroup(addReq);
-            } else if ("USER".equalsIgnoreCase(newRole)) {
-                AdminRemoveUserFromGroupRequest removeReq = AdminRemoveUserFromGroupRequest.builder()
-                    .userPoolId("eu-north-1_LBRgh68wz")
-                    .username(sub)
-                    .groupName("ADMIN")
-                    .build();
-                cognitoClient.adminRemoveUserFromGroup(removeReq);
-            }
+            cognitoClient.adminUpdateUserAttributes(req);
         }
     }
 }

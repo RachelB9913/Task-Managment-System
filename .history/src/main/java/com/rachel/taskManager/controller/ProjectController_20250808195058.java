@@ -78,9 +78,8 @@ public class ProjectController {
     
     @PreAuthorize("hasRole('ADMIN') or #user.cognitoSub == authentication.name")
     @DeleteMapping("/{projectId}")
-    public ResponseEntity<String> deleteProject(@PathVariable Long projectId, @CurrentUser User user) {
+    public ResponseEntity<Void> deleteProject(@PathVariable Long projectId, @CurrentUser User user) {
         projectService.deleteProject(projectId, user);
-        String message = String.format("Project %d deleted successfully.", projectId);
-        return ResponseEntity.ok(message);
+        return ResponseEntity.ok(projectService.deleteProject(projectId, user));
     }
 }

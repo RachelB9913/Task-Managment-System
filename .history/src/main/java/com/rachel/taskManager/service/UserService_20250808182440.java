@@ -13,6 +13,7 @@ import com.rachel.taskManager.repository.ProjectRepository;
 import com.rachel.taskManager.repository.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import org.springframework.security.oauth2.jwt.Jwt;

@@ -89,6 +89,7 @@ public class AdminController {
     @PutMapping("/users/{sub}/role/{newRole}")
     public ResponseEntity<String> updateUserRole(@PathVariable String sub, @PathVariable String newRole) {
         userService.updateUserRole(sub, newRole);
-        return ResponseEntity.ok(String.format("User %s role changed to %s successfully.", sub, newRole));
+        String message = String.format("User %s role updated to %s successfully.", sub, newRole);
+        return ResponseEntity.ok(message);
     }
 }

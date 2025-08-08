@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import com.rachel.taskManager.model.Project;
 import com.rachel.taskManager.model.User;
 import com.rachel.taskManager.repository.ProjectRepository;
-import com.rachel.taskManager.repository.TaskRepository;
 import com.rachel.taskManager.dto.ProjectRequestDTO;
 import com.rachel.taskManager.dto.ProjectResponseDTO;
 import com.rachel.taskManager.mapper.ProjectMapper;
@@ -29,7 +28,6 @@ public class ProjectService {
     
     private final ProjectRepository projectRepository;
     private final ProjectMapper projectMapper;
-    private final TaskRepository taskRepository;
     private static final Logger logger = LoggerFactory.getLogger(ProjectService.class);
 
     private void checkProjectOwnershipOrAdmin(Project project, User currentUser) {
@@ -90,19 +88,19 @@ public class ProjectService {
 
 
     @Transactional
-    public void deleteProject(Long id, User currentUser) {
+    public void deleteProject(Long id, User user) {
         Project project = projectRepository.findById(id)
-            .orElseThrow(() -> new NoSuchElementException("Project not found"));
-
-        checkProjectOwnershipOrAdmin(project, currentUser);
-        logger.info("[DB STATE] Projects in DB before: {} | Tasks in DB before: {}", projectRepository.count(), taskRepository.count());
-
-        // Remove the project from the owner's collection
-        User owner = project.getUser();
-        owner.getProjects().remove(project);
-        
-        logger.info("[DB STATE] Projects in DB after: {} | Tasks in DB after: {}", projectRepository.count(), taskRepository.count());
+                .orElseThrow(() -> new NoSuchElementException("Project not found"));
+        checkProjectOwnershipOrAdmin(project, user);
+        // Remove all tasks explicitly to ensure orphan removal
+        project.getTasks().clear();
+        projectRepository.save(project);
+        projectRepository.delete(project);
+        logger.info("Project {} deleted successfully by [{}]", id, formatUser(user));
+        if (projectRepository.existsById(id)) {
+            logger.error("Project {} was not deleted from the database!", id);
+            throw new IllegalStateException("Project was not deleted");
+        }
     }
-
 
 }

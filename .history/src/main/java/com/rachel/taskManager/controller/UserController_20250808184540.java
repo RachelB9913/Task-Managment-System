@@ -28,8 +28,28 @@ public class UserController {
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping("/me")
     public ResponseEntity<UserDTO> getCurrentUser(@CurrentUser User user) {
-        logger.info("User [{}] requested their profile", user.getCognitoSub());
         return ResponseEntity.ok(userService.getCurrentUserSummary(user.getCognitoSub()));
     }
+
+    
+    // @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    // @GetMapping("/me/projects")
+    // public ResponseEntity<PaginatedResponse<ProjectWithTaskSummaryDTO>> getProjectsForCurrentUser(
+    //         @CurrentUser User user,
+    //         Pageable pageable
+    // ) {
+    //     Page<ProjectWithTaskSummaryDTO> page = userService.getProjectsWithTasks(user.getCognitoSub(), pageable);
+
+    //     PaginatedResponse<ProjectWithTaskSummaryDTO> response = new PaginatedResponse<>(
+    //         page.getContent(),
+    //         page.getNumber(),
+    //         page.getSize(),
+    //         page.getTotalElements(),
+    //         page.getTotalPages(),
+    //         page.isLast()
+    //     );
+
+    //     return ResponseEntity.ok(response);
+    // }
 
 }

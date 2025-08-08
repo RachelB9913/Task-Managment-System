@@ -4,19 +4,17 @@ import com.rachel.taskManager.dto.PaginatedResponse;
 import com.rachel.taskManager.dto.ProjectResponseDTO;
 import com.rachel.taskManager.dto.TaskResponseDTO;
 import com.rachel.taskManager.dto.UserDTO;
+import com.rachel.taskManager.repository.UserRepository;
+import com.rachel.taskManager.dto.UpdateRoleRequest;
 import com.rachel.taskManager.service.ProjectService;
 import com.rachel.taskManager.service.TaskService;
 import com.rachel.taskManager.service.UserService;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -26,6 +24,7 @@ public class AdminController {
     private final TaskService taskService;
     private final ProjectService projectService;
     private final UserService userService;
+    private final UserRepository userRepository;
 
     // --- TASKS ---
     @PreAuthorize("hasRole('ADMIN')")
@@ -73,7 +72,7 @@ public class AdminController {
         try {
             UserDTO user = userService.getCurrentUser(sub);
             return ResponseEntity.ok(user);
-        } catch (UsernameNotFoundException ex) {
+        } catch (org.springframework.security.core.userdetails.UsernameNotFoundException ex) {
             return ResponseEntity.notFound().build();
         }
     }
@@ -85,10 +84,10 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/users/{sub}/role/{newRole}")
-    public ResponseEntity<String> updateUserRole(@PathVariable String sub, @PathVariable String newRole) {
-        userService.updateUserRole(sub, newRole);
-        return ResponseEntity.ok(String.format("User %s role changed to %s successfully.", sub, newRole));
+    @PreAuthorize("hasRole('ADMIN')")  //TODO -understand
+    @PutMapping("/users/{sub}/role")
+    public ResponseEntity<Void> updateUserRole(@PathVariable String sub, @RequestBody UpdateRoleRequest request) {
+        userService.updateUserRole(sub, request.getNewRole());
+        return ResponseEntity.noContent().build();
     }
 }

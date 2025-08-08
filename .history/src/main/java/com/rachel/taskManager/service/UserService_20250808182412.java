@@ -13,6 +13,7 @@ import com.rachel.taskManager.repository.ProjectRepository;
 import com.rachel.taskManager.repository.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -31,8 +32,9 @@ import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminRemove
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminUpdateUserAttributesRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AttributeType;
 
+
 @Service
-@lombok.RequiredArgsConstructor
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
@@ -197,4 +199,5 @@ public class UserService {
             }
         }
     }
+}
 }
