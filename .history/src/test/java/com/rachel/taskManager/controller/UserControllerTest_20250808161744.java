@@ -3,6 +3,7 @@ package com.rachel.taskManager.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rachel.taskManager.dto.UpdateRoleRequest;
 import com.rachel.taskManager.service.UserService;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,8 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(UserController.class)
-class UserControllerTest {
+@WebMvcTest(AdminController.class)
+class AdminControllerWebMvcTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
@@ -32,7 +33,7 @@ class UserControllerTest {
     @WithMockUser(roles = "ADMIN")
     void getAllUsers_shouldReturnOk() throws Exception {
         Mockito.when(userService.getAllUsers()).thenReturn(Collections.emptyList());
-        mockMvc.perform(get("/api/users/all"))
+        mockMvc.perform(get("/api/admin/users/all"))
                 .andExpect(status().isOk());
     }
 
@@ -40,7 +41,7 @@ class UserControllerTest {
     @WithMockUser(roles = "ADMIN")
     void deleteUser_shouldReturnNoContent() throws Exception {
         Mockito.doNothing().when(userService).deleteUser("sub123");
-        mockMvc.perform(delete("/api/users/sub123").with(csrf()))
+        mockMvc.perform(delete("/api/admin/users/sub123").with(csrf()))
                 .andExpect(status().isNoContent());
     }
 
@@ -50,7 +51,7 @@ class UserControllerTest {
         UpdateRoleRequest req = new UpdateRoleRequest();
         req.setNewRole("ADMIN");
         Mockito.doNothing().when(userService).updateUserRole(eq("sub123"), eq("ADMIN"));
-        mockMvc.perform(put("/api/users/sub123/role")
+        mockMvc.perform(put("/api/admin/users/sub123/role")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(req))
                 .with(csrf()))
