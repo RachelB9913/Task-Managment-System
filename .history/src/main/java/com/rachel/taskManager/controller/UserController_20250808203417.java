@@ -25,7 +25,7 @@ public class UserController {
     private final UserService userService;
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN') or #currentUser.cognitoSub == authentication.name")
     @GetMapping("/me")
     public ResponseEntity<UserDTO> getCurrentUser(@CurrentUser User user) {
         logger.info("User [{}] requested their profile", user.getCognitoSub());
