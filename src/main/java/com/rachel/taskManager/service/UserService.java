@@ -126,11 +126,9 @@ public class UserService {
     }
 
 
-    public List<UserDTO> getAllUsers() {
-        List<User> users = userRepository.findAll();
-        return users.stream()
-            .map(userMapper::toDTO)
-            .toList();
+    public Page<UserDTO> getAllUsers(Pageable pageable) {
+        Page<User> usersPage = userRepository.findAll(pageable);
+        return usersPage.map(userMapper::toDTO);
     }
 
 

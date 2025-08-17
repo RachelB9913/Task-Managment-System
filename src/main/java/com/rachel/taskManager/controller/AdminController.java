@@ -17,7 +17,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -62,9 +61,17 @@ public class AdminController {
     // --- USERS ---
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/users/all")
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        List<UserDTO> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
+        public ResponseEntity<PaginatedResponse<UserDTO>> getAllUsers(Pageable pageable) {
+            Page<UserDTO> page = userService.getAllUsers(pageable);
+            PaginatedResponse<UserDTO> response = new PaginatedResponse<>(
+                page.getContent(),
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages(),
+                page.isLast()
+            );
+            return ResponseEntity.ok(response);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
