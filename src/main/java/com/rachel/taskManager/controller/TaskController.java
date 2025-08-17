@@ -1,5 +1,6 @@
 package com.rachel.taskManager.controller;
 
+import com.rachel.taskManager.dto.PaginatedResponse;
 import com.rachel.taskManager.dto.TaskRequestDTO;
 import com.rachel.taskManager.dto.TaskResponseDTO;
 import com.rachel.taskManager.model.User;
@@ -41,13 +42,13 @@ public class TaskController {
 
     @PreAuthorize("hasRole('ADMIN') or #currentUser.cognitoSub == authentication.name")
     @GetMapping
-    public ResponseEntity<Page<TaskResponseDTO>> getTasks(
+    public ResponseEntity<PaginatedResponse<TaskResponseDTO>> getTasks(
             @PathVariable Long projectId,
             @CurrentUser User currentUser,
             Pageable pageable) {
         logger.info("User [{}] requested tasks for project {}", formatUser(currentUser), projectId);
         Page<TaskResponseDTO> tasks = taskService.getTasksByProjectIdAndUser(projectId, currentUser, pageable);
-        return ResponseEntity.ok(tasks);
+        return ResponseEntity.ok(PaginatedResponse.from(tasks));
     }
 
 

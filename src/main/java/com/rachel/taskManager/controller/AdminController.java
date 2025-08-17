@@ -31,15 +31,7 @@ public class AdminController {
     @GetMapping("/tasks/all")
     public ResponseEntity<PaginatedResponse<TaskResponseDTO>> getAllTasks(Pageable pageable) {
         Page<TaskResponseDTO> page = taskService.getAllTasks(pageable);
-        PaginatedResponse<TaskResponseDTO> response = new PaginatedResponse<>(
-            page.getContent(),
-            page.getNumber(),
-            page.getSize(),
-            page.getTotalElements(),
-            page.getTotalPages(),
-            page.isLast()
-        );
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(PaginatedResponse.from(page));
     }
 
     // --- PROJECTS ---
@@ -47,31 +39,15 @@ public class AdminController {
     @GetMapping("/projects/all")
     public ResponseEntity<PaginatedResponse<ProjectResponseDTO>> getAllProjects(Pageable pageable) {
         Page<ProjectResponseDTO> page = projectService.getAllProjects(pageable);
-        PaginatedResponse<ProjectResponseDTO> response = new PaginatedResponse<>(
-            page.getContent(),
-            page.getNumber(),
-            page.getSize(),
-            page.getTotalElements(),
-            page.getTotalPages(),
-            page.isLast()
-        );
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(PaginatedResponse.from(page));
     }
 
     // --- USERS ---
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/users/all")
-        public ResponseEntity<PaginatedResponse<UserDTO>> getAllUsers(Pageable pageable) {
-            Page<UserDTO> page = userService.getAllUsers(pageable);
-            PaginatedResponse<UserDTO> response = new PaginatedResponse<>(
-                page.getContent(),
-                page.getNumber(),
-                page.getSize(),
-                page.getTotalElements(),
-                page.getTotalPages(),
-                page.isLast()
-            );
-            return ResponseEntity.ok(response);
+    public ResponseEntity<PaginatedResponse<UserDTO>> getAllUsers(Pageable pageable) {
+        Page<UserDTO> page = userService.getAllUsers(pageable);
+        return ResponseEntity.ok(PaginatedResponse.from(page));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

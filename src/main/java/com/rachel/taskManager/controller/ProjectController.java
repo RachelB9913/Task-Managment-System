@@ -36,15 +36,7 @@ public class ProjectController {
     public ResponseEntity<PaginatedResponse<ProjectResponseDTO>> getMyProjects(@CurrentUser User user, Pageable pageable) {
         logger.info("User [{}] requested their projects", formatUser(user));
         Page<ProjectResponseDTO> page = projectService.getProjectsByUser(user, pageable);
-        PaginatedResponse<ProjectResponseDTO> response = new PaginatedResponse<>(
-            page.getContent(),
-            page.getNumber(),
-            page.getSize(),
-            page.getTotalElements(),
-            page.getTotalPages(),
-            page.isLast()
-        );
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(PaginatedResponse.from(page));
     }
 
 
