@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
+import com.rachel.taskManager.config.CognitoProperties;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminAddUserToGroupRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminDeleteUserRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminRemoveUserFromGroupRequest;
@@ -41,6 +42,7 @@ public class UserService {
     private final ProjectMapper projectMapper;
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private final CognitoIdentityProviderClient cognitoClient;
+    private final CognitoProperties cognitoProperties;
 
 
     public UserDTO getCurrentUser(String sub) {
@@ -133,12 +135,12 @@ public class UserService {
 
 
      public void deleteUserFromCognito(String username) {
-        // use injected client
-        var deleteUserRequest = AdminDeleteUserRequest.builder()
-                .userPoolId("eu-north-1_LBRgh68wz")
-                .username(username)
-                .build();
-        cognitoClient.adminDeleteUser(deleteUserRequest);
+    // use injected client
+    var deleteUserRequest = AdminDeleteUserRequest.builder()
+        .userPoolId(cognitoProperties.getUserPoolId())
+        .username(username)
+        .build();
+    cognitoClient.adminDeleteUser(deleteUserRequest);
     }
 
 
@@ -168,32 +170,32 @@ public class UserService {
     }
 
     public void updateUserRoleInCognito(String sub, String newRole) {
-        // update custom attribute
-        var updateReq = AdminUpdateUserAttributesRequest.builder()
-                .userPoolId("eu-north-1_LBRgh68wz")
-                .username(sub)
-                .userAttributes(AttributeType.builder()
-                        .name("custom:role")
-                        .value(newRole)
-                        .build())
-                .build();
-        cognitoClient.adminUpdateUserAttributes(updateReq);
+    // update custom attribute
+    var updateReq = AdminUpdateUserAttributesRequest.builder()
+        .userPoolId(cognitoProperties.getUserPoolId())
+        .username(sub)
+        .userAttributes(AttributeType.builder()
+            .name("custom:role")
+            .value(newRole)
+            .build())
+        .build();
+    cognitoClient.adminUpdateUserAttributes(updateReq);
 
-        // manage group membership
-        if ("ADMIN".equalsIgnoreCase(newRole)) {
-            var addReq = AdminAddUserToGroupRequest.builder()
-                    .userPoolId("eu-north-1_LBRgh68wz")
-                    .username(sub)
-                    .groupName("ADMIN")
-                    .build();
-            cognitoClient.adminAddUserToGroup(addReq);
-        } else { // treat anything else as USER - remove from ADMIN
-            var removeReq = AdminRemoveUserFromGroupRequest.builder()
-                    .userPoolId("eu-north-1_LBRgh68wz")
-                    .username(sub)
-                    .groupName("ADMIN")
-                    .build();
-            cognitoClient.adminRemoveUserFromGroup(removeReq);
-        }
+    // manage group membership
+    if ("ADMIN".equalsIgnoreCase(newRole)) {
+        var addReq = AdminAddUserToGroupRequest.builder()
+            .userPoolId(cognitoProperties.getUserPoolId())
+            .username(sub)
+            .groupName("ADMIN")
+            .build();
+        cognitoClient.adminAddUserToGroup(addReq);
+    } else { // treat anything else as USER - remove from ADMIN
+        var removeReq = AdminRemoveUserFromGroupRequest.builder()
+            .userPoolId(cognitoProperties.getUserPoolId())
+            .username(sub)
+            .groupName("ADMIN")
+            .build();
+        cognitoClient.adminRemoveUserFromGroup(removeReq);
+    }
     }
 }

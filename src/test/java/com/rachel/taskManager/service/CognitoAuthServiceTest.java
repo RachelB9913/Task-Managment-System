@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.*;
-import org.springframework.test.util.ReflectionTestUtils;
+import com.rachel.taskManager.config.CognitoProperties;
 import org.springframework.web.client.RestTemplate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,21 +22,20 @@ public class CognitoAuthServiceTest {
     private RestTemplate restTemplate;
 
     private CognitoAuthService cognitoAuthService;
+    private CognitoProperties cognitoProperties;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        // Create the real service (not mocked)
-        cognitoAuthService = new CognitoAuthService();
+        cognitoProperties = new CognitoProperties();
+        cognitoProperties.setClientId("test-client");
+        cognitoProperties.setRedirectUri("http://localhost:8080/callback");
+        cognitoProperties.setTokenUri("http://mock-cognito/token");
 
-        // Inject environment properties manually
-        ReflectionTestUtils.setField(cognitoAuthService, "clientId", "test-client");
-        ReflectionTestUtils.setField(cognitoAuthService, "redirectUri", "http://localhost:8080/callback");
-        ReflectionTestUtils.setField(cognitoAuthService, "tokenUri", "http://mock-cognito/token");
-
+        cognitoAuthService = new CognitoAuthService(cognitoProperties);
         // Inject the mocked RestTemplate into the private final field
-        ReflectionTestUtils.setField(cognitoAuthService, "restTemplate", restTemplate);
+        org.springframework.test.util.ReflectionTestUtils.setField(cognitoAuthService, "restTemplate", restTemplate);
     }
 
     @Test
