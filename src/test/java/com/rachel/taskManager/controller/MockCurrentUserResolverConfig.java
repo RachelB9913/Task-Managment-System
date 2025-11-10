@@ -10,6 +10,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.core.MethodParameter;
 
 @TestConfiguration
+// Configuration class to provide a mock CurrentUserResolver for tests - not a test class itself
 public class MockCurrentUserResolverConfig {
     @Bean
     public HandlerMethodArgumentResolver mockCurrentUserArgumentResolver() {

@@ -13,6 +13,7 @@ public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
     private String description;
 
@@ -32,6 +33,22 @@ public class Project {
         this.name = name;
         this.description = description;
         this.tasks = new HashSet<>();
+    }
+
+    // equals and hashCode based on id - because using set and not list
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Project project = (Project) o;
+
+        return id != null ? id.equals(project.id) : project.id == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 
     // Getters and Setters

@@ -20,11 +20,13 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @RequiredArgsConstructor
 public class CurrentUserResolver implements HandlerMethodArgumentResolver {
     // This resolver will be used to inject the current user into controller methods
+    // HandlerMethodArgumentResolver is a Spring interface for resolving method arguments in controller methods.
 
     private final UserService userService;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
+        // Check if the parameter is annotated with @CurrentUser and is of type User
         return parameter.hasParameterAnnotation(CurrentUser.class)
             && parameter.getParameterType().equals(User.class);
     }
@@ -33,6 +35,7 @@ public class CurrentUserResolver implements HandlerMethodArgumentResolver {
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+        // Retrieve the current authentication from the security context
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication instanceof JwtAuthenticationToken jwtAuth) {

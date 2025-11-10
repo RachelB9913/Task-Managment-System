@@ -56,7 +56,9 @@ public class UserService {
         User user = userRepository.findByCognitoSub(sub)
             .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        return user.getProjects().stream().map(projectMapper::toDTO).toList();
+        return user.getProjects().stream()
+            .map(project -> projectMapper.toDTO(project))
+            .toList();
     }
 
     

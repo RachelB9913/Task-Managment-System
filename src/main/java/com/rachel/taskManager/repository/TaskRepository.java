@@ -11,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
-    Page<Task> findAllByProjectIdAndUser(Long projectId, User user, Pageable pageable);
+    Page<Task> findAllByProjectIdAndUser(Long projectId, User user, Pageable pageable); // user-specific tasks in a project
 
     Page<Task> findAllByProjectId(Long projectId, Pageable pageable);
     

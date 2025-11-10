@@ -69,7 +69,7 @@ public class AdminController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/users/{sub}/role/{newRole}")
+    @PutMapping("/users/{sub}/role/{newRole}") // new role maybe 'USER' or 'ADMIN'
     public ResponseEntity<String> updateUserRole(@PathVariable String sub, @PathVariable String newRole) {
         userService.updateUserRole(sub, newRole);
         return ResponseEntity.ok(String.format("User %s role changed to %s successfully.", sub, newRole));

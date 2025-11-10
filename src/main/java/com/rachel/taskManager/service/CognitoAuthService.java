@@ -27,6 +27,8 @@ public class CognitoAuthService {
     }
 
     public CognitoTokenResponse exchangeCodeForTokens(String code) {
+        // Prepare the HTTP request to exchange the authorization code for tokens.
+        // This involves setting the appropriate headers and body parameters as required by the OAuth2 token endpoint.
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 

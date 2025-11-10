@@ -27,6 +27,22 @@ public class User {
         this.isAdmin = false;
     }
 
+    // equals and hashCode based on cognitoSub - because using set and not list
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        return cognitoSub != null ? cognitoSub.equals(user.cognitoSub) : user.cognitoSub == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return cognitoSub != null ? cognitoSub.hashCode() : 0;
+    }
+
     // Getters and Setters
     public String getCognitoSub() {return cognitoSub;}
     public void setCognitoSub(String cognitoSub) {this.cognitoSub = cognitoSub;}

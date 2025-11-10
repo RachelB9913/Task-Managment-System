@@ -11,7 +11,7 @@ public class Task {
     private Long id;
     private String title;
     private String description;
-    private String status; // "todo", "in_progress", "done"
+    private String status; // "todo", "in_progress", "done" -> could be enum but keeping simple for now
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
